@@ -9,6 +9,16 @@ class QuizCardPlayer {
     private JFrame frame;
     private JTextArea questionTextArea;
     private JTextArea answerTextArea;
+    private enum menu {
+        NEW(new JMenuItem("New card")), 
+        OPEN(new JMenuItem("Open card")), 
+        SAVE(new JMenuItem("Save card")), 
+        SHOW_SIDE_PANEL(new JCheckBoxMenuItem("Show side panel")), 
+        EDITOR_MODE(new JCheckBoxMenuItem("Editor mode"));
+
+        JMenuItem menuItem;
+        menu(JMenuItem menuItem) {this.menuItem = menuItem;}
+    };
 
     public static void main(String args[]) {
         new QuizCardPlayer();
@@ -25,13 +35,6 @@ class QuizCardPlayer {
         JMenu openBuilderButton = new JMenu("Quiz Card Builder");
         
         JSeparator menuSeparator = new JSeparator();
-        
-        JMenuItem newMenuItem = new JMenuItem("New card", KeyEvent.VK_N);
-        JMenuItem openMenuItem = new JMenuItem("Open card", KeyEvent.VK_O);
-        JMenuItem saveMenuItem = new JMenuItem("Save card", KeyEvent.VK_S);
-        
-        JCheckBoxMenuItem showSidePanelMenuItem = new JCheckBoxMenuItem("Show side panel");
-        JCheckBoxMenuItem editorModeMenuItem = new JCheckBoxMenuItem("Editor mode");
         
         JPanel panel = new JPanel(new BorderLayout());
         JPanel centralPanel = new JPanel();
@@ -54,19 +57,26 @@ class QuizCardPlayer {
         
         frame = new JFrame("Quiz Cards");
         
-        // Menu bar
+        // Menu
         menuBar.add(optionsMenu);
-        optionsMenu.setMnemonic(KeyEvent.VK_P);
-        optionsMenu.add(newMenuItem);
-        optionsMenu.add(openMenuItem);
-        optionsMenu.add(saveMenuItem);
+        optionsMenu.add(menu.NEW.menuItem);
+        optionsMenu.add(menu.OPEN.menuItem);
+        optionsMenu.add(menu.SAVE.menuItem);
         optionsMenu.add(menuSeparator);
-        optionsMenu.add(showSidePanelMenuItem);
-        optionsMenu.add(editorModeMenuItem);
+        optionsMenu.add((JCheckBoxMenuItem) menu.SHOW_SIDE_PANEL.menuItem);
+        optionsMenu.add((JCheckBoxMenuItem) menu.EDITOR_MODE.menuItem);
         
         menuBar.add(openBuilderButton);
         openBuilderButton.setMnemonic(KeyEvent.VK_B);
         openBuilderButton.setEnabled(false);
+
+        // Menu shortcuts
+        optionsMenu.setMnemonic(KeyEvent.VK_P);
+        menu.NEW.menuItem.setMnemonic(KeyEvent.VK_N);
+        menu.OPEN.menuItem.setMnemonic(KeyEvent.VK_O);
+        menu.SAVE.menuItem.setMnemonic(KeyEvent.VK_S);
+        menu.SHOW_SIDE_PANEL.menuItem.setMnemonic(KeyEvent.VK_I);
+        menu.EDITOR_MODE.menuItem.setMnemonic(KeyEvent.VK_E);
         
         // Panel
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
