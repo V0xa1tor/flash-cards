@@ -6,11 +6,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileFilter;
 
-class QuizCardPlayer {
+class App {
 
     private JFrame frame;
     private JPanel panel;
     private JPanel centralPanel;
+    private JPanel boxLayoutPanel;
     private JSplitPane splitPane;
     private JPanel questionPanel;
     private JPanel answerPanel;
@@ -29,10 +30,10 @@ class QuizCardPlayer {
     };
 
     public static void main(String args[]) {
-        new QuizCardPlayer();
+        new App();
     }
 
-    QuizCardPlayer() {
+    App() {
         initGUI();
     }
     
@@ -61,7 +62,8 @@ class QuizCardPlayer {
         JScrollPane answerScrollPane = new JScrollPane(answerTextArea);
         
         panel = new JPanel(new BorderLayout());
-        centralPanel = new JPanel();
+        centralPanel = new JPanel(new BorderLayout());
+        boxLayoutPanel = new JPanel();
         questionPanel = new JPanel(new BorderLayout(0, 10));
         answerPanel = new JPanel(new BorderLayout(0, 10));
         
@@ -88,16 +90,24 @@ class QuizCardPlayer {
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setPreferredSize(new Dimension(600, 200));
 
-        // Central panel
-        centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.X_AXIS));
-
         // Split pane
         splitPane.setLeftComponent(sideScrollPane);
+
+        // Central panel
+        centralPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        centralPanel.add(boxLayoutPanel, BorderLayout.CENTER);
+        centralPanel.add(flipCardButton, BorderLayout.SOUTH);
+
+        // Box layout panel
+        boxLayoutPanel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        boxLayoutPanel.setLayout(new BoxLayout(boxLayoutPanel, BoxLayout.X_AXIS));
+        boxLayoutPanel.add(questionPanel);
+        boxLayoutPanel.add(answerPanel);
         
         // Minimum size
         sideScrollPane.setMinimumSize(new Dimension(100, 0));
-        questionScrollPane.setMinimumSize(new Dimension(200, 0));
-        answerScrollPane.setMinimumSize(new Dimension(200, 0));
+        questionPanel.setMinimumSize(new Dimension(200, 0));
+        answerPanel.setMinimumSize(new Dimension(200, 0));
         
         // Question card
         questionPanel.add(questionLabel, BorderLayout.NORTH);
@@ -195,15 +205,8 @@ class QuizCardPlayer {
         flipCardButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CardLayout cards = (CardLayout) centralPanel.getLayout();
-                cards.next(centralPanel);
-                if (flipCardButton.getParent().equals(questionPanel)) {
-                    answerPanel.add(flipCardButton, BorderLayout.SOUTH);
-                    answerTextArea.requestFocusInWindow();
-                } else {
-                    questionPanel.add(flipCardButton, BorderLayout.SOUTH);
-                    questionTextArea.requestFocusInWindow();
-                }
+                questionPanel.setVisible(!questionPanel.isVisible());
+                answerPanel.setVisible(!answerPanel.isVisible());
             }
         });
 
@@ -227,32 +230,34 @@ class QuizCardPlayer {
         }
 
         if (menu.EDITOR_MODE.menuItem.isSelected()) {
-            questionPanel.setBorder(new EmptyBorder(10, 10, 10, 5));
-            answerPanel.setBorder(new EmptyBorder(10, 5, 10, 10));
+            questionPanel.setBorder(new EmptyBorder(0, 0, 0, 5));
+            answerPanel.setBorder(new EmptyBorder(0, 5, 0, 0));
 
             flipCardButton.setVisible(false);
-
-            questionTextArea.requestFocusInWindow();
             
-            centralPanel.removeAll();
-            centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.X_AXIS));
-            centralPanel.add(questionPanel);
-            centralPanel.add(answerPanel);
-            centralPanel.revalidate();
+            questionPanel.setVisible(true);
+            answerPanel.setVisible(true);
+            
+            questionTextArea.requestFocusInWindow();
+            questionTextArea.setEditable(true);
+            answerTextArea.setEditable(true);
+            
+            centralPanel.validate();
         } else {
-            questionPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-            answerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+            questionPanel.setBorder(null);
+            answerPanel.setBorder(null);
+            
+            questionTextArea.requestFocusInWindow();
             
             flipCardButton.setVisible(true);
-            questionPanel.add(flipCardButton, BorderLayout.SOUTH);
-            
-            questionTextArea.requestFocusInWindow();
-            
-            centralPanel.removeAll();
-            centralPanel.setLayout(new CardLayout());
-            centralPanel.add(questionPanel);
-            centralPanel.add(answerPanel);
-            centralPanel.revalidate();
+
+            questionPanel.setVisible(true);
+            answerPanel.setVisible(false);
+
+            questionTextArea.setEditable(false);
+            answerTextArea.setEditable(false);
+
+            centralPanel.validate();
         }
     }
 
