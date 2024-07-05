@@ -33,18 +33,13 @@ class QuizCardPlayer {
         JPanel questionPanel = new JPanel(new BorderLayout(0, 10));
         JPanel answerPanel = new JPanel(new BorderLayout(0, 10));
 
-        JList<String> cardsList = new JList<>(new String[] {
-            "Card 1",
-            "Card 2",
-            "Card 3",
-            "Card 4"
-        });
+        JList<QuizCard> cardsList = new JList<>();
         
         JLabel questionLabel = new JLabel("Question", JLabel.CENTER);
         JLabel answerLabel = new JLabel("Answer", JLabel.CENTER);
         
-        questionTextArea = new JTextArea("Hello, world!", 2, 2);
-        answerTextArea = new JTextArea("Hello, world!", 2, 2);
+        questionTextArea = new JTextArea();
+        answerTextArea = new JTextArea();
         
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
