@@ -31,10 +31,10 @@ class QuizCardPlayer {
     }
     
     private void initGUI() {
+
         JMenuBar menuBar = new JMenuBar();
         
         JMenu optionsMenu = new JMenu("Options");
-        JMenu openBuilderButton = new JMenu("Quiz Card Builder");
         
         JSeparator menuSeparator = new JSeparator();
         
@@ -67,10 +67,6 @@ class QuizCardPlayer {
         optionsMenu.add(menuSeparator);
         optionsMenu.add((JCheckBoxMenuItem) menu.SHOW_SIDE_PANEL.menuItem);
         optionsMenu.add((JCheckBoxMenuItem) menu.EDITOR_MODE.menuItem);
-        
-        menuBar.add(openBuilderButton);
-        openBuilderButton.setMnemonic(KeyEvent.VK_B);
-        openBuilderButton.setEnabled(false);
 
         // Menu shortcuts
         optionsMenu.setMnemonic(KeyEvent.VK_P);
