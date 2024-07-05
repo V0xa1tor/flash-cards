@@ -32,32 +32,32 @@ class QuizCardPlayer {
     
     private void initGUI() {
 
+        frame = new JFrame("Quiz Cards");
+
+        questionTextArea = new JTextArea();
+        answerTextArea = new JTextArea();
+
+        JLabel questionLabel = new JLabel("Question", JLabel.CENTER);
+        JLabel answerLabel = new JLabel("Answer", JLabel.CENTER);
+        
         JMenuBar menuBar = new JMenuBar();
-        
         JMenu optionsMenu = new JMenu("Options");
-        
         JSeparator menuSeparator = new JSeparator();
+        
+        JList<QuizCard> cardsList = new JList<>();
+        
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        
+        JScrollPane sideScrollPane = new JScrollPane(cardsList);
+        JScrollPane questionScrollPane = new JScrollPane(questionTextArea);
+        JScrollPane answerScrollPane = new JScrollPane(answerTextArea);
         
         JPanel panel = new JPanel(new BorderLayout());
         JPanel centralPanel = new JPanel();
         JPanel questionPanel = new JPanel(new BorderLayout(0, 10));
         JPanel answerPanel = new JPanel(new BorderLayout(0, 10));
-
-        JList<QuizCard> cardsList = new JList<>();
         
-        JLabel questionLabel = new JLabel("Question", JLabel.CENTER);
-        JLabel answerLabel = new JLabel("Answer", JLabel.CENTER);
-        
-        questionTextArea = new JTextArea();
-        answerTextArea = new JTextArea();
-        
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-
-        JScrollPane sideScrollPane = new JScrollPane(cardsList);
-        JScrollPane questionScrollPane = new JScrollPane(questionTextArea);
-        JScrollPane answerScrollPane = new JScrollPane(answerTextArea);
-        
-        frame = new JFrame("Quiz Cards");
+        addGUIListeners();
         
         // Menu
         menuBar.add(optionsMenu);
@@ -76,17 +76,24 @@ class QuizCardPlayer {
         menu.SHOW_SIDE_PANEL.menuItem.setMnemonic(KeyEvent.VK_I);
         menu.EDITOR_MODE.menuItem.setMnemonic(KeyEvent.VK_E);
         
-        // Panel
+        // Principal panel
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
         panel.setPreferredSize(new Dimension(600, 200));
         panel.add(splitPane);
 
+        // Split pane
         splitPane.setLeftComponent(sideScrollPane);
         splitPane.setRightComponent(centralPanel);
 
+        // Central panel
         centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.X_AXIS));
         centralPanel.add(questionPanel);
         centralPanel.add(answerPanel);
+        
+        // Minimum size
+        sideScrollPane.setMinimumSize(new Dimension(100, 0));
+        questionScrollPane.setMinimumSize(new Dimension(200, 0));
+        answerScrollPane.setMinimumSize(new Dimension(200, 0));
         
         // Question card
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 5));
@@ -104,11 +111,8 @@ class QuizCardPlayer {
 
         answerTextArea.setMargin(new Insets(10, 10, 10, 10));
         answerTextArea.setLineWrap(true);
-        
-        // Scroll pane
-        sideScrollPane.setMinimumSize(new Dimension(100, 0));
-        questionScrollPane.setMinimumSize(new Dimension(200, 0));
-        answerScrollPane.setMinimumSize(new Dimension(200, 0));
+
+        updateGUI();
         
         // Frame
         frame.add(menuBar, BorderLayout.NORTH);
