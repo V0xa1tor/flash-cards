@@ -11,5 +11,21 @@ class QuizCard implements Serializable {
         this.question = question;
         this.answer = answer;
     }
+
+    String getQuestion() {
+        return question;
+    }
+
+    void setQuestion(String question) {
+        this.question = question;
+    }
+
+    String getAnswer() {
+        return answer;
+    }
+
+    void setAnswer(String answer) {
+        this.answer = answer;
+    }
     
 }
