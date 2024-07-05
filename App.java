@@ -24,9 +24,14 @@ class QuizCardPlayer {
         JMenu optionsMenu = new JMenu("Options");
         JMenu openBuilderButton = new JMenu("Quiz Card Builder");
         
+        JSeparator menuSeparator = new JSeparator();
+        
         JMenuItem newMenuItem = new JMenuItem("New card", KeyEvent.VK_N);
         JMenuItem openMenuItem = new JMenuItem("Open card", KeyEvent.VK_O);
         JMenuItem saveMenuItem = new JMenuItem("Save card", KeyEvent.VK_S);
+        
+        JCheckBoxMenuItem showSidePanelMenuItem = new JCheckBoxMenuItem("Show side panel");
+        JCheckBoxMenuItem editorModeMenuItem = new JCheckBoxMenuItem("Editor mode");
         
         JPanel panel = new JPanel(new BorderLayout());
         JPanel centralPanel = new JPanel();
@@ -55,6 +60,9 @@ class QuizCardPlayer {
         optionsMenu.add(newMenuItem);
         optionsMenu.add(openMenuItem);
         optionsMenu.add(saveMenuItem);
+        optionsMenu.add(menuSeparator);
+        optionsMenu.add(showSidePanelMenuItem);
+        optionsMenu.add(editorModeMenuItem);
         
         menuBar.add(openBuilderButton);
         openBuilderButton.setMnemonic(KeyEvent.VK_B);
