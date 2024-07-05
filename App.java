@@ -2,14 +2,13 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.basic.BasicBorders;
 
 class QuizCardPlayer {
 
     private JFrame frame;
+    private JTextArea questionTextArea;
+    private JTextArea answerTextArea;
 
     public static void main(String args[]) {
         new QuizCardPlayer();
@@ -30,7 +29,6 @@ class QuizCardPlayer {
         JMenuItem saveMenuItem = new JMenuItem("Save card", KeyEvent.VK_S);
         
         JPanel panel = new JPanel(new BorderLayout());
-        JPanel sidePanel = new JPanel();
         JPanel centralPanel = new JPanel();
         JPanel questionPanel = new JPanel(new BorderLayout(0, 10));
         JPanel answerPanel = new JPanel(new BorderLayout(0, 10));
@@ -41,16 +39,20 @@ class QuizCardPlayer {
             "Card 3",
             "Card 4"
         });
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-
+        
         JLabel questionLabel = new JLabel("Question", JLabel.CENTER);
         JLabel answerLabel = new JLabel("Answer", JLabel.CENTER);
         
-        JTextArea questionTextArea = new JTextArea("Hello, world!", 2, 2);
-        JTextArea answerTextArea = new JTextArea("Hello, world!", 2, 2);
+        questionTextArea = new JTextArea("Hello, world!", 2, 2);
+        answerTextArea = new JTextArea("Hello, world!", 2, 2);
         
-        frame = new JFrame("Quiz Card Player");
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+
+        JScrollPane sideScrollPane = new JScrollPane(cardsList);
+        JScrollPane questionScrollPane = new JScrollPane(questionTextArea);
+        JScrollPane answerScrollPane = new JScrollPane(answerTextArea);
+        
+        frame = new JFrame("Quiz Cards");
         
         // Menu bar
         menuBar.add(optionsMenu);
@@ -65,28 +67,39 @@ class QuizCardPlayer {
         
         // Panel
         panel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        panel.setPreferredSize(new Dimension(400, 300));
+        panel.setPreferredSize(new Dimension(600, 200));
         panel.add(splitPane);
 
-        splitPane.setLeftComponent(sidePanel);
+        splitPane.setLeftComponent(sideScrollPane);
         splitPane.setRightComponent(centralPanel);
-
-        sidePanel.add(cardsList);
 
         centralPanel.setLayout(new BoxLayout(centralPanel, BoxLayout.X_AXIS));
         centralPanel.add(questionPanel);
         centralPanel.add(answerPanel);
         
         // Question card
+        questionPanel.setBorder(new EmptyBorder(10, 10, 10, 5));
         questionPanel.add(questionLabel, BorderLayout.NORTH);
-        questionPanel.add(questionTextArea, BorderLayout.CENTER);
+        questionPanel.add(questionScrollPane, BorderLayout.CENTER);
         //button
         
         // Answer card
+        answerPanel.setBorder(new EmptyBorder(10, 5, 10, 10));
         answerPanel.add(answerLabel, BorderLayout.NORTH);
-        answerPanel.add(answerTextArea, BorderLayout.CENTER);
+        answerPanel.add(answerScrollPane, BorderLayout.CENTER);
         //button
-
+        
+        // Text area
+        questionTextArea.setMargin(new Insets(10, 10, 10, 10));
+        questionTextArea.setLineWrap(true);
+        answerTextArea.setMargin(new Insets(10, 10, 10, 10));
+        answerTextArea.setLineWrap(true);
+        
+        // Scroll pane
+        sideScrollPane.setMinimumSize(new Dimension(100, 0));
+        questionScrollPane.setMinimumSize(new Dimension(200, 0));
+        answerScrollPane.setMinimumSize(new Dimension(200, 0));
+        
         // Frame
         frame.add(menuBar, BorderLayout.NORTH);
         frame.add(panel, BorderLayout.CENTER);
