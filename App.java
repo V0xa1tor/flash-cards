@@ -76,17 +76,16 @@ class QuizCardPlayer {
         questionPanel.setBorder(new EmptyBorder(10, 10, 10, 5));
         questionPanel.add(questionLabel, BorderLayout.NORTH);
         questionPanel.add(questionScrollPane, BorderLayout.CENTER);
-        //button
         
         // Answer card
         answerPanel.setBorder(new EmptyBorder(10, 5, 10, 10));
         answerPanel.add(answerLabel, BorderLayout.NORTH);
         answerPanel.add(answerScrollPane, BorderLayout.CENTER);
-        //button
         
         // Text area
         questionTextArea.setMargin(new Insets(10, 10, 10, 10));
         questionTextArea.setLineWrap(true);
+
         answerTextArea.setMargin(new Insets(10, 10, 10, 10));
         answerTextArea.setLineWrap(true);
         
