@@ -253,6 +253,43 @@ class App {
             }
         });
 
+        cardsList.addKeyListener(new KeyListener() {
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    openCard("./cards/" + cardsList.getSelectedValue());
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {}
+
+            @Override
+            public void keyTyped(KeyEvent e) {}
+        });
+
+        cardsList.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    openCard("./cards/" + cardsList.getSelectedValue());
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {}
+
+            @Override
+            public void mouseExited(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {}
+
+            @Override
+            public void mouseReleased(MouseEvent e) {}
+        });
+
     }
 
     void touchCardsDirectory() {
@@ -308,6 +345,19 @@ class App {
         touchCardsDirectory();
         File cardsDir = new File("./cards");
         cardsList.setListData(cardsDir.list());
+    }
+
+    void openCard(String path) {
+        try {
+            ObjectInputStream oi = new ObjectInputStream(new FileInputStream(path));
+            QuizCard card = (QuizCard) oi.readObject();
+            oi.close();
+
+            questionTextArea.setText(card.getQuestion());
+            answerTextArea.setText(card.getAnswer());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     String getExtension(File f) {
