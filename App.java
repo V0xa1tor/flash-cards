@@ -40,6 +40,14 @@ class App {
     
     private void initGUI() {
 
+        // Look and Feel
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+                | UnsupportedLookAndFeelException e) {
+            e.printStackTrace();
+        }
+
         frame = new JFrame("Quiz Cards");
 
         questionTextArea = new JTextArea();
