@@ -1,6 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -15,6 +15,7 @@ class App {
     private JSplitPane splitPane;
     private JPanel questionPanel;
     private JPanel answerPanel;
+    private JList<String> cardsList;
     private JButton flipCardButton;
     private JTextArea questionTextArea;
     private JTextArea answerTextArea;
@@ -53,7 +54,7 @@ class App {
         JMenu optionsMenu = new JMenu("Options");
         JSeparator menuSeparator = new JSeparator();
         
-        JList<QuizCard> cardsList = new JList<>();
+        cardsList = new JList<>();
         
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         
@@ -124,6 +125,7 @@ class App {
         answerTextArea.setMargin(new Insets(10, 10, 10, 10));
         answerTextArea.setLineWrap(true);
 
+        loadCards();
         updateGUI();
         
         // Frame
@@ -137,9 +139,38 @@ class App {
 
     private void addGUIListeners() {
 
+        FileFilter fileFilter = new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+
+                if (f.isDirectory()) {
+                    return true;
+                }
+            
+                String extension = getExtension(f);
+                if (extension != null) {
+                    if (extension.equals(QuizCard.extension)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+
+            }
+
+            @Override
+            public String getDescription() {
+                return "Quiz card (*.card)";
+            }
+
+        };
+
         menu.NEW.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                loadCards();
                 questionTextArea.setText("");
                 answerTextArea.setText("");
                 questionTextArea.requestFocusInWindow();
@@ -149,48 +180,59 @@ class App {
         menu.OPEN.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                touchCardsDirectory();
+                loadCards();
                 JFileChooser fileChooser = new JFileChooser("./cards");
-                fileChooser.setFileFilter(new FileFilter() {
-                    @Override
-                    public boolean accept(File f) {
-
-                        if (f.isDirectory()) {
-                            return true;
-                        }
-                    
-                        String extension = getExtension(f);
-                        if (extension != null) {
-                            if (extension.equals(QuizCard.extension)) {
-                                return true;
-                            } else {
-                                return false;
-                            }
-                        } else {
-                            return false;
-                        }
-                    }
-                    @Override
-                    public String getDescription() {
-                        return "Quiz card (*.card)";
-                    }
-                });
+                fileChooser.setFileFilter(fileFilter);
                 fileChooser.showOpenDialog(frame);
+
+                try {
+                    ObjectInputStream oi = new ObjectInputStream(
+                        new FileInputStream(fileChooser.getSelectedFile())
+                    );
+                    QuizCard card = (QuizCard) oi.readObject();
+                    questionTextArea.setText(card.getQuestion());
+                    answerTextArea.setText(card.getAnswer());
+                    oi.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
         menu.SAVE.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                touchCardsDirectory();
+
+                QuizCard card = new QuizCard(
+                    questionTextArea.getText(),
+                    answerTextArea.getText()
+                );
+
+                loadCards();
                 JFileChooser fileChooser = new JFileChooser("./cards");
+                fileChooser.setFileFilter(fileFilter);
                 fileChooser.showSaveDialog(frame);
+
+                try {
+                    ObjectOutputStream oo = new ObjectOutputStream(
+                        new FileOutputStream(
+                            fileChooser.getSelectedFile().getPath() + "." + QuizCard.extension
+                        )
+                    );
+                    oo.writeObject(card);
+                    oo.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
 
         menu.SIDE_PANEL.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                loadCards();
                 updateGUI();
             }
         });
@@ -198,6 +240,7 @@ class App {
         menu.EDITOR_MODE.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                loadCards();
                 updateGUI();
             }
         });
@@ -259,6 +302,12 @@ class App {
 
             centralPanel.validate();
         }
+    }
+
+    void loadCards() {
+        touchCardsDirectory();
+        File cardsDir = new File("./cards");
+        cardsList.setListData(cardsDir.list());
     }
 
     String getExtension(File f) {
