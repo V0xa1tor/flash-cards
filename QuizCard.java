@@ -2,6 +2,8 @@ import java.io.Serializable;
 
 class QuizCard implements Serializable {
 
+    static final long serialVersionUID = 1L;
+
     static final String extension = "card";
 
     private String question;
