@@ -17,12 +17,14 @@ class App {
     private JPanel answerPanel;
     private JList<String> cardsList;
     private JButton flipCardButton;
+    private JPopupMenu contextMenu;
     private JTextArea questionTextArea;
     private JTextArea answerTextArea;
     private enum menu {
         NEW(new JMenuItem("New card")), 
         OPEN(new JMenuItem("Open card")), 
         SAVE(new JMenuItem("Save card")), 
+        DELETE(new JMenuItem("Delete card")), 
         SIDE_PANEL(new JCheckBoxMenuItem("Side panel")), 
         EDITOR_MODE(new JCheckBoxMenuItem("Editor mode"));
 
@@ -61,6 +63,7 @@ class App {
         JMenuBar menuBar = new JMenuBar();
         JMenu optionsMenu = new JMenu("Options");
         JSeparator menuSeparator = new JSeparator();
+        contextMenu = new JPopupMenu();
         
         cardsList = new JList<>();
         
@@ -86,6 +89,9 @@ class App {
         optionsMenu.add(menuSeparator);
         optionsMenu.add((JCheckBoxMenuItem) menu.SIDE_PANEL.menuItem);
         optionsMenu.add((JCheckBoxMenuItem) menu.EDITOR_MODE.menuItem);
+
+        // Context menu
+        contextMenu.add(menu.DELETE.menuItem);
 
         // Menu shortcuts
         optionsMenu.setMnemonic(KeyEvent.VK_P);
@@ -237,6 +243,13 @@ class App {
             }
         });
 
+        menu.DELETE.menuItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // deleteFile();
+            }
+        });
+
         menu.SIDE_PANEL.menuItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -268,6 +281,10 @@ class App {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     openCard("./cards/" + cardsList.getSelectedValue());
                 }
+
+                if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+                    // deleteFile();
+                }
             }
 
             @Override
@@ -282,6 +299,11 @@ class App {
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     openCard("./cards/" + cardsList.getSelectedValue());
+                }
+
+                // Context menu
+                if (e.getButton() == MouseEvent.BUTTON3) {
+                    contextMenu.show(cardsList, e.getX(), e.getY());
                 }
             }
 
