@@ -210,10 +210,21 @@ class GUI {
      * @param state the state to set, enabled or disabled
      */
     static void enableEditorModeView(boolean state) {
+        // Match check
+        if (EDITOR_MODE.isSelected() != state) EDITOR_MODE.setSelected(state);
+
         if (state) {
-            //
+            // Show both
+            QUESTION_PANEL.setVisible(true);
+            ANSWER_PANEL.setVisible(true);
+            // Hide flip button
+            FLIP.setVisible(false);
         } else {
-            //
+            // Show just one
+            QUESTION_PANEL.setVisible(true);
+            ANSWER_PANEL.setVisible(false);
+            // Show flip button
+            FLIP.setVisible(true);
         }
     }
 
