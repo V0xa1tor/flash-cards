@@ -1,7 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Insets;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
@@ -76,6 +79,7 @@ class GUI {
     private static JPanel rootPanel;
     private static JSplitPane splitPane;
     private static JPanel mainPanel;
+    private static Component cardDivider = Box.createHorizontalStrut(10);
 
 
 
@@ -99,17 +103,21 @@ class GUI {
 
         // Card (question/answer)
         JLabel questionLabel = new JLabel("Question", JLabel.CENTER);
+        questionLabel.setFont(new Font(null, Font.BOLD, 20));
         QUESTION_PANEL.add(questionLabel, BorderLayout.NORTH);
         JScrollPane questionScrollPane = new JScrollPane(QUESTION);
         QUESTION_PANEL.add(questionScrollPane, BorderLayout.CENTER);
+        QUESTION_PANEL.setMinimumSize(new Dimension(200, 150));
         QUESTION.setMargin(new Insets(10, 10, 10, 10));
         QUESTION.setWrapStyleWord(true);
         QUESTION.setLineWrap(true);
         
         JLabel answerLabel = new JLabel("Answer", JLabel.CENTER);
+        answerLabel.setFont(new Font(null, Font.BOLD, 20));
         ANSWER_PANEL.add(answerLabel, BorderLayout.NORTH);
         JScrollPane answerScrollPane = new JScrollPane(ANSWER);
         ANSWER_PANEL.add(answerScrollPane, BorderLayout.CENTER);
+        ANSWER_PANEL.setMinimumSize(new Dimension(200, 150));
         ANSWER.setMargin(new Insets(10, 10, 10, 10));
         ANSWER.setWrapStyleWord(true);
         ANSWER.setLineWrap(true);
@@ -130,24 +138,26 @@ class GUI {
 
         // Root panel
         rootPanel = new JPanel(new BorderLayout());
-        rootPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         rootPanel.setPreferredSize(new Dimension(600, 200));
 
 
 
         // Side panel
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        splitPane.setDividerSize(10);
         JScrollPane sideScrollPane = new JScrollPane(CARDS_LIST);
+        sideScrollPane.setMinimumSize(new Dimension(100, 200));
         splitPane.setLeftComponent(sideScrollPane);
 
         // Main panel
-        mainPanel = new JPanel(new BorderLayout());
-        mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        mainPanel = new JPanel(new BorderLayout(0, 10));
         JPanel cardPanel = new JPanel();
         cardPanel.setLayout(new BoxLayout(cardPanel, BoxLayout.X_AXIS));
-        cardPanel.setBorder(new EmptyBorder(0, 0, 10, 0));
         cardPanel.add(QUESTION_PANEL);
+        cardPanel.add(cardDivider);
         cardPanel.add(ANSWER_PANEL);
+
         mainPanel.add(cardPanel, BorderLayout.CENTER);
         mainPanel.add(FLIP, BorderLayout.SOUTH);
 
@@ -161,7 +171,7 @@ class GUI {
         // Frame
         FRAME.add(menuBar, BorderLayout.NORTH);
         FRAME.add(rootPanel, BorderLayout.CENTER);
-
+        
         FRAME.pack();
         FRAME.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         FRAME.setVisible(true);
@@ -192,7 +202,7 @@ class GUI {
         // Remove all components
         rootPanel.removeAll();
 
-        // Change component
+        // Change view
         if (state) {
             rootPanel.add(splitPane);
             splitPane.add(mainPanel);
@@ -200,6 +210,16 @@ class GUI {
             rootPanel.add(mainPanel);
         }
 
+        // Add/remove border
+        if (state) {
+            mainPanel.setBorder(null);
+        } else {
+            mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        }
+
+        // Reset minimun size
+        FRAME.setMinimumSize(FRAME.getLayout().minimumLayoutSize(FRAME));
+        
         // revalidate all components (show changes)
         rootPanel.revalidate();
     }
@@ -216,16 +236,25 @@ class GUI {
         if (state) {
             // Show both
             QUESTION_PANEL.setVisible(true);
+            cardDivider.setVisible(true);
             ANSWER_PANEL.setVisible(true);
             // Hide flip button
             FLIP.setVisible(false);
         } else {
             // Show just one
             QUESTION_PANEL.setVisible(true);
+            cardDivider.setVisible(false);
             ANSWER_PANEL.setVisible(false);
             // Show flip button
             FLIP.setVisible(true);
         }
+
+        // reset size
+        QUESTION_PANEL.setPreferredSize(QUESTION_PANEL.getMinimumSize());
+        ANSWER_PANEL.setPreferredSize(ANSWER_PANEL.getMinimumSize());
+
+        // Reset minimun size
+        FRAME.setMinimumSize(FRAME.getLayout().minimumLayoutSize(FRAME));
     }
 
     /**
