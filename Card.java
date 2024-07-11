@@ -85,5 +85,18 @@ class Card extends File {
     void setAnswer(String answer) {
         this.answer = answer;
     }
+
+    /**
+     * Get card file name (without extension)
+     * 
+     * @return the Card file name
+     */
+    @Override
+    public String toString() {
+        String name = this.getName();
+        int i = name.lastIndexOf('.');
+        name = name.substring(0, i);
+        return name;
+    }
     
 }

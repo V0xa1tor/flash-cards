@@ -9,7 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.stream.Stream;
+import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
@@ -55,12 +55,16 @@ class Behavior {
      * Add all behaviors to {@link GUI}
      */
     Behavior() {
+        // Add all behaviors
         addCardsBehavior();
         addFileBehavior();
         addViewBehavior();
         addContextMenuBehavior();
         addKeyboardBehavior();
         addMouseBehavior();
+
+        // Update cards list
+        updateCardsList();
     }
 
 
@@ -270,21 +274,19 @@ class Behavior {
      * Also updates the cards which is displayed on list.
      */
     private void saveCard() {
-        // Save question/answer on card
-        Card card = App.currentCard;
-        card.setQuestion(GUI.getQuestionText());
-        card.setAnswer(GUI.getAnswerText());
-
         // File chooser
         JFileChooser fileChooser = new JFileChooser(App.cardsFolder);
         fileChooser.setFileFilter(cardFileFilter);
         fileChooser.showSaveDialog(GUI.FRAME);
 
         String filePath = fileChooser.getSelectedFile().getPath();
-        File file = new File(filePath + "." + Card.EXTENSION);
+        App.currentCard = new Card(filePath + "." + Card.EXTENSION,
+            GUI.getQuestionText(),
+            GUI.getAnswerText()
+        );
 
         // Save card
-        serializeCard(file, card);
+        serializeCard(App.currentCard);
 
         // Reload cards list
         updateCardsList();
@@ -296,32 +298,23 @@ class Behavior {
      */
     private void updateCardsList() {
         File cardsDir = Utils.touchDirectory("./cards");
-        Card[] cards = (Card[]) Stream.of(cardsDir.listFiles()).map(f -> {
-            try {
-                // Getting card from file
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
-                Card card = (Card) ois.readObject();
-                ois.close();
-                return card;
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-            return null;
-        }).toArray();
-        GUI.CARDS_LIST.setListData(cards);
+        ArrayList<Card> cards = new ArrayList<>();
+        for (File f : cardsDir.listFiles()) {
+            cards.add(deserializeCard(f));
+        }
+        GUI.CARDS_LIST.setListData(cards.toArray(new Card[]{}));
     }
 
     /**
      * Serialize Card object on file.
      * 
-     * @param file the file to set the Card, serialized
-     * @param card the card to be serialized on file
+     * @param card the card to be serialized
      */
-    private void serializeCard(File file, Card card) {
+    private void serializeCard(Card card) {
         try {
             // Get file to save the card
             ObjectOutputStream oos = new ObjectOutputStream(
-                new FileOutputStream(file)
+                new FileOutputStream(card)
             );
 
             // Save card
