@@ -260,13 +260,12 @@ class Behavior {
         // File chooser
         JFileChooser fileChooser = new JFileChooser(App.cardsFolder);
         fileChooser.setFileFilter(cardFileFilter);
-        fileChooser.showOpenDialog(GUI.FRAME);
-
-        // Getting card
-        Card card = deserializeCard(fileChooser.getSelectedFile());
-
-        // Setting card
-        setCurrentCard(card); // and updating cards list
+        if (fileChooser.showOpenDialog(GUI.FRAME) == JFileChooser.APPROVE_OPTION) {
+            // Getting card
+            Card card = deserializeCard(fileChooser.getSelectedFile());
+            // Setting card
+            setCurrentCard(card); // and updating cards list
+        }
     }
 
     /**
@@ -277,19 +276,19 @@ class Behavior {
         // File chooser
         JFileChooser fileChooser = new JFileChooser(App.cardsFolder);
         fileChooser.setFileFilter(cardFileFilter);
-        fileChooser.showSaveDialog(GUI.FRAME);
-
-        String filePath = fileChooser.getSelectedFile().getPath();
-        App.currentCard = new Card(filePath + "." + Card.EXTENSION,
-            GUI.getQuestionText(),
-            GUI.getAnswerText()
-        );
-
-        // Save card
-        serializeCard(App.currentCard);
-
-        // Reload cards list
-        updateCardsList();
+        if (fileChooser.showSaveDialog(GUI.FRAME) == JFileChooser.APPROVE_OPTION) {
+            String filePath = fileChooser.getSelectedFile().getPath();
+            App.currentCard = new Card(filePath + "." + Card.EXTENSION,
+                GUI.getQuestionText(),
+                GUI.getAnswerText()
+            );
+    
+            // Save card
+            serializeCard(App.currentCard);
+    
+            // Reload cards list
+            updateCardsList();
+        }
     }
 
     /**
