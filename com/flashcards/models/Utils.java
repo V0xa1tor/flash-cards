@@ -1,3 +1,5 @@
+package com.flashcards.models;
+
 import java.io.File;
 
 /**
@@ -7,7 +9,7 @@ import java.io.File;
  * 
  * @author Vítor Menezes Oliveira
  */
-class Utils {
+public class Utils {
     
     /**
      * Gets files extension, based on file name.
@@ -15,7 +17,7 @@ class Utils {
      * @param fileName the file name
      * @return the extension
      */
-    static String getExtension(String fileName) {
+    public static String getExtension(String fileName) {
         String ext = null;
         int i = fileName.lastIndexOf('.');
         
@@ -32,7 +34,7 @@ class Utils {
      * @return the extension
      * @see {@link File}
      */
-    static String getExtension(File f) {
+    public static String getExtension(File f) {
         return getExtension(f.getName());
     }
 
@@ -43,7 +45,7 @@ class Utils {
      * @param path the directory path
      * @return the directory as a {@link File} object
      */
-    static File touchDirectory(String path) {
+    public static File touchDirectory(String path) {
         File directory = new File(path);
         directory.mkdir();
         return directory;

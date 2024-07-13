@@ -1,3 +1,9 @@
+package com.flashcards;
+
+import com.flashcards.models.*;
+import com.flashcards.views.*;
+import com.flashcards.controllers.*;
+
 /**
  * Quiz Card App.
  * App to play Quiz Cards. Cards with question in front, answer in back.
@@ -10,10 +16,10 @@
  * @see {@link Behavior}
  * @see {@link Utils}
  */
-class App {
+public class App {
 
-    static Card currentCard = new Card();
-    static final String cardsFolder = "./cards";
+    public static Card currentCard = new Card();
+    public static final String CARDS_FOLDER = "./cards";
 
 
     

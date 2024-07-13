@@ -1,26 +1,12 @@
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Insets;
+package com.flashcards.views;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.UIManager;
-import javax.swing.border.EmptyBorder;
+import java.awt.*;
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+import com.flashcards.models.*;
+import com.flashcards.controllers.*;
 
 /**
  * The Graphical User Interface of {@link App}.
@@ -28,7 +14,7 @@ import javax.swing.border.EmptyBorder;
  * 
  * @author Vítor Menezes Oliveira
  */
-class GUI {
+public class GUI {
 
     // Look and Feel
     static {
@@ -40,30 +26,30 @@ class GUI {
     }
 
     // Frame
-    static final JFrame FRAME = new JFrame("Flash Cards");
+    public static final JFrame FRAME = new JFrame("Flash Cards");
     
     // File menu items
-    static final JMenuItem NEW = new JMenuItem("New card");
-    static final JMenuItem OPEN = new JMenuItem("Open card");
-    static final JMenuItem SAVE = new JMenuItem("Save card");
+    public static final JMenuItem NEW = new JMenuItem("New card");
+    public static final JMenuItem OPEN = new JMenuItem("Open card");
+    public static final JMenuItem SAVE = new JMenuItem("Save card");
     
     // View menu items
-    static final JCheckBoxMenuItem SIDE_PANEL = new JCheckBoxMenuItem("Side panel");
-    static final JCheckBoxMenuItem EDITOR_MODE = new JCheckBoxMenuItem("Editor mode");
+    public static final JCheckBoxMenuItem SIDE_PANEL = new JCheckBoxMenuItem("Side panel");
+    public static final JCheckBoxMenuItem EDITOR_MODE = new JCheckBoxMenuItem("Editor mode");
     
     // Context menu item
-    static final JMenuItem DELETE = new JMenuItem("Delete card");
+    public static final JMenuItem DELETE = new JMenuItem("Delete card");
 
     // Buttons to play Quiz Card
-    static final JButton FLIP = new JButton("Flip card");
-    static final JButton PREVIOUS = new JButton("Previous");
-    static final JButton NEXT = new JButton("Next");
+    public static final JButton FLIP = new JButton("Flip card");
+    public static final JButton PREVIOUS = new JButton("Previous");
+    public static final JButton NEXT = new JButton("Next");
 
     // Cards list
-    static final JList<Card> CARDS_LIST = new JList<>();
+    public static final JList<Card> CARDS_LIST = new JList<>();
 
     // Context menu
-    static final JPopupMenu CONTEXT_MENU = new JPopupMenu();
+    public static final JPopupMenu CONTEXT_MENU = new JPopupMenu();
     
     // Card (question/answer)
     private static final JPanel QUESTION_PANEL = new JPanel(new BorderLayout(0, 10));
@@ -86,7 +72,7 @@ class GUI {
     /**
      * Initialize the GUI (show it)
      */
-    GUI() {
+    public GUI() {
         init();
 
         // Initial view
@@ -182,7 +168,7 @@ class GUI {
      * This method just toglle visibility of question and answer panels.
      * For it works, need one set to false and the other set to true.
      */
-    static void flipCard() {
+    public static void flipCard() {
         if (!EDITOR_MODE.isSelected()) {
             QUESTION_PANEL.setVisible(!QUESTION_PANEL.isVisible());
             ANSWER_PANEL.setVisible(!ANSWER_PANEL.isVisible());
@@ -195,7 +181,7 @@ class GUI {
      * 
      * @param state the state to set, enabled or disabled
      */
-    static void enableSidePanelView(boolean state) {
+    public static void enableSidePanelView(boolean state) {
         // Match check
         if (SIDE_PANEL.isSelected() != state) SIDE_PANEL.setSelected(state);
         
@@ -229,7 +215,7 @@ class GUI {
      * 
      * @param state the state to set, enabled or disabled
      */
-    static void enableEditorModeView(boolean state) {
+    public static void enableEditorModeView(boolean state) {
         // Match check
         if (EDITOR_MODE.isSelected() != state) EDITOR_MODE.setSelected(state);
 
@@ -262,7 +248,7 @@ class GUI {
      * 
      * @return the question text
      */
-    static String getQuestionText() {
+    public static String getQuestionText() {
         return QUESTION.getText();
     }
     
@@ -271,7 +257,7 @@ class GUI {
      * 
      * @param text the text to set
      */
-    static void setQuestionText(String text) {
+    public static void setQuestionText(String text) {
         QUESTION.setText(text);
     }
 
@@ -280,7 +266,7 @@ class GUI {
      * 
      * @return the answer text
      */
-    static String getAnswerText() {
+    public static String getAnswerText() {
         return ANSWER.getText();
     }
 
@@ -289,21 +275,21 @@ class GUI {
      * 
      * @param text the text to set
      */
-    static void setAnswerText(String text) {
+    public static void setAnswerText(String text) {
         ANSWER.setText(text);
     }
 
     /**
      * Resquest focus to question text area.
      */
-    static void requestQuestionFocus() {
+    public static void requestQuestionFocus() {
         QUESTION.requestFocusInWindow();
     }
 
     /**
      * Request focus to answer text area.
      */
-    static void requestAnswerFocus() {
+    public static void requestAnswerFocus() {
         ANSWER.requestFocusInWindow();
     }
 

@@ -1,18 +1,15 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
+package com.flashcards.controllers;
 
-import javax.swing.JFileChooser;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
+
+import com.flashcards.*;
+import com.flashcards.models.*;
+import com.flashcards.views.*;
 
 /**
  * The behavior of {@link GUI}. This class defines all the behaviors of {@link GUI} 
@@ -20,7 +17,7 @@ import javax.swing.filechooser.FileFilter;
  * 
  * @author Vítor Menezes Oliveira
  */
-class Behavior {
+public class Behavior {
 
     // Quiz Card (*.card) file filter
     private FileFilter cardFileFilter = new FileFilter() {
@@ -54,7 +51,7 @@ class Behavior {
     /**
      * Add all behaviors to {@link GUI}
      */
-    Behavior() {
+    public Behavior() {
         // Add all behaviors
         addCardsBehavior();
         addFileBehavior();
@@ -258,7 +255,7 @@ class Behavior {
      */
     private void openCard() {
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(App.cardsFolder);
+        JFileChooser fileChooser = new JFileChooser(App.CARDS_FOLDER);
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showOpenDialog(GUI.FRAME) == JFileChooser.APPROVE_OPTION) {
             // Getting card
@@ -274,7 +271,7 @@ class Behavior {
      */
     private void saveCard() {
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(App.cardsFolder);
+        JFileChooser fileChooser = new JFileChooser(App.CARDS_FOLDER);
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showSaveDialog(GUI.FRAME) == JFileChooser.APPROVE_OPTION) {
             String filePath = fileChooser.getSelectedFile().getPath();

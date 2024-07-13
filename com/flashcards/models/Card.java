@@ -1,3 +1,5 @@
+package com.flashcards.models;
+
 import java.io.File;
 
 /**
@@ -5,11 +7,11 @@ import java.io.File;
  * 
  * @author Vítor Menezes Oliveira
  */
-class Card extends File {
+public class Card extends File {
 
     static final long serialVersionUID = 1L;
 
-    static final String EXTENSION = "card";
+    public static final String EXTENSION = "card";
 
     private String question;
     private String answer;
@@ -55,7 +57,7 @@ class Card extends File {
      * 
      * @return the question text
      */
-    String getQuestion() {
+    public String getQuestion() {
         return question;
     }
 
@@ -64,7 +66,7 @@ class Card extends File {
      * 
      * @param question the question text to set
      */
-    void setQuestion(String question) {
+    public void setQuestion(String question) {
         this.question = question;
     }
 
@@ -73,7 +75,7 @@ class Card extends File {
      * 
      * @return the answer text
      */
-    String getAnswer() {
+    public String getAnswer() {
         return answer;
     }
 
@@ -82,7 +84,7 @@ class Card extends File {
      * 
      * @param answer the answer text to set
      */
-    void setAnswer(String answer) {
+    public void setAnswer(String answer) {
         this.answer = answer;
     }
 
