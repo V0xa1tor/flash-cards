@@ -40,7 +40,7 @@ class GUI {
     }
 
     // Frame
-    static final JFrame FRAME = new JFrame("Quiz Cards");
+    static final JFrame FRAME = new JFrame("Flash Cards");
     
     // File menu items
     static final JMenuItem NEW = new JMenuItem("New card");
