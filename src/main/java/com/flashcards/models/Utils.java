@@ -4,13 +4,15 @@ import java.io.File;
 
 /**
  * Utilitary class.
- * Define util methods like to get extension of a file,
+ * <p>
+ * Defines util methods like to get extension of a file,
  * and touch a directory.
+ * </p>
  * 
  * @author Vítor Menezes Oliveira
  */
 public class Utils {
-    
+
     /**
      * Gets files extension, based on file name.
      * 
@@ -20,9 +22,9 @@ public class Utils {
     public static String getExtension(String fileName) {
         String ext = null;
         int i = fileName.lastIndexOf('.');
-        
+
         if (i > 0 && i < fileName.length() - 1) {
-            ext = fileName.substring(i+1).toLowerCase();
+            ext = fileName.substring(i + 1).toLowerCase();
         }
         return ext;
     }

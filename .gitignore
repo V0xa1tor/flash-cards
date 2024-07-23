@@ -1,0 +1,9 @@
+# App
+/cards
+
+# Maven
+/bin
+/target
+
+# Visual Studio Code
+/.vscode

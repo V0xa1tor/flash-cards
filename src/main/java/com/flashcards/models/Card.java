@@ -3,27 +3,26 @@ package com.flashcards.models;
 import java.io.File;
 
 /**
- * The Card used in {@link App}. Used to save question and answer (serialized).
- * 
- * @author Vítor Menezes Oliveira
+ * The Card used in <code>Flash Cards App</code>.
+ * <p>
+ * Used to save question and answer (serialized).
+ * </p>
  */
 public class Card extends File {
 
-    static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-    public static final String EXTENSION = "card";
+    public static final transient String EXTENSION = "card";
 
     private String question;
     private String answer;
-
-
 
     /**
      * Creates a card with a pathname, question and answer texts.
      * 
      * @param pathname the pathname of the card
      * @param question the question text
-     * @param answer the answer text
+     * @param answer   the answer text
      */
     public Card(String pathname, String question, String answer) {
         super(pathname);
@@ -36,7 +35,7 @@ public class Card extends File {
      * Also sets the name to "card.card".
      * 
      * @param question the question text
-     * @param answer the answer text
+     * @param answer   the answer text
      */
     public Card(String question, String answer) {
         this("card." + EXTENSION, question, answer);
@@ -49,8 +48,6 @@ public class Card extends File {
     public Card() {
         this("", "");
     }
-
-    
 
     /**
      * Gets card question text
@@ -100,5 +97,5 @@ public class Card extends File {
         name = name.substring(0, i);
         return name;
     }
-    
+
 }
