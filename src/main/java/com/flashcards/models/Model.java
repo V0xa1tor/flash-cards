@@ -24,13 +24,15 @@ public class Model {
     public static final String CARDS_FOLDER = "./cards";
 
     /**
-     * Updates cards which is displaying in cards list.
-     * Also creates cards directory, if it does not exists.
+     * Gets all cards in <code>cards folder</code>.
+     * 
+     * @return an array of the cards
+     * @see {@link Card}
+     * @see {@link #CARDS_FOLDER}
      */
     public static Card[] getCardsList() {
-        File cardsDir = touchDirectory(CARDS_FOLDER);
         ArrayList<Card> cards = new ArrayList<>();
-        for (File f : cardsDir.listFiles()) {
+        for (File f : touchDirectory(CARDS_FOLDER).listFiles()) {
             cards.add(deserializeCard(f));
         }
         return cards.toArray(new Card[] {});

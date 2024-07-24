@@ -9,6 +9,7 @@ import javax.swing.JMenuItem;
 
 import com.flashcards.controllers.Controller;
 import com.flashcards.models.Card;
+import com.flashcards.models.Model;
 
 /**
  * View representing the menu bar.
@@ -50,9 +51,8 @@ class AppMenuBar extends JMenuBar implements View {
     private final JCheckBoxMenuItem SIDE_PANEL_CB = new JCheckBoxMenuItem();
     private final JCheckBoxMenuItem EDITOR_MODE_CB = new JCheckBoxMenuItem();
 
-    // Components to bind view actions
+    // GUI
     private GUI gui;
-    private CardPanel cardPanel;
 
     /**
      * Initialize this view.
@@ -66,19 +66,10 @@ class AppMenuBar extends JMenuBar implements View {
      * needed bind other views.
      * </p>
      * 
-     * <ul>
-     * <li><strong>Side panel</strong>: need a GUI with a function
-     * to switch side panel.
-     * <li><strong>Editor mode</strong>: need a card panel
-     * to enable card editor mode.
-     * </ul>
-     * 
-     * @param gui       the view to use <code>Side panel</code>
-     * @param cardPanel the view to use <code>Editor mode</code>
+     * @param gui the view wich have <code>Side panel</code> and <code>Card panel</code>
      */
-    AppMenuBar(GUI gui, CardPanel cardPanel) {
+    AppMenuBar(GUI gui) {
         this.gui = gui;
-        this.cardPanel = cardPanel;
 
         // Make
         style();
@@ -149,20 +140,23 @@ class AppMenuBar extends JMenuBar implements View {
 
         // New card
         NEW.addActionListener((ActionEvent e) -> {
-            cardPanel.setCard(new Card());
+            gui.CARD_PANEL.setCard(new Card());
+            gui.SIDE_PANEL.setCardsList(Model.getCardsList());
         });
-
+        
         // Open card
         OPEN.addActionListener((ActionEvent e) -> {
             Card card = controller.getCardFromFile(gui);
             if (card != null) {
-                cardPanel.setCard(card);
+                gui.CARD_PANEL.setCard(card);
+                gui.SIDE_PANEL.setCardsList(Model.getCardsList());
             }
         });
-
+        
         // Save card
         SAVE.addActionListener((ActionEvent e) -> {
-            controller.saveCard(cardPanel.getCard(), gui);
+            controller.saveCard(gui.CARD_PANEL.getCard(), gui);
+            gui.SIDE_PANEL.setCardsList(Model.getCardsList());
         });
     }
 
@@ -186,8 +180,8 @@ class AppMenuBar extends JMenuBar implements View {
 
         // Enter/exit editor mode
         EDITOR_MODE_CB.addActionListener((ActionEvent e) -> {
-            if (cardPanel != null) {
-                cardPanel.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
+            if (gui.CARD_PANEL != null) {
+                gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
             }
         });
     }

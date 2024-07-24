@@ -29,7 +29,7 @@ class SidePanel extends JPanel implements View {
     private Controller controller;
 
     // Card panel
-    private CardPanel cardPanel;
+    private GUI gui;
 
     // Cards list
     private static final JList<Card> CARDS_LIST = new JList<>();
@@ -47,10 +47,10 @@ class SidePanel extends JPanel implements View {
      * Stylizes and builds this view.
      * </p>
      * 
-     * @param cardPanel the Card panel to load open cards
+     * @param gui the GUI to get <code>Card panel</code>
      */
-    SidePanel(CardPanel cardPanel) {
-        this.cardPanel = cardPanel;
+    SidePanel(GUI gui) {
+        this.gui = gui;
 
         // Make
         style();
@@ -87,7 +87,7 @@ class SidePanel extends JPanel implements View {
 
                 // Double click
                 if (e.getClickCount() == 2) {
-                    cardPanel.setCard(CARDS_LIST.getSelectedValue());
+                    gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
                 }
 
                 // Right click
@@ -111,7 +111,7 @@ class SidePanel extends JPanel implements View {
 
                 // Enter key
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    cardPanel.setCard(CARDS_LIST.getSelectedValue());
+                    gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
                 }
 
                 // Delete key
@@ -140,6 +140,15 @@ class SidePanel extends JPanel implements View {
 
         // Scroll pane
         SCROLL_PANE.setMinimumSize(new Dimension(100, 200));
+    }
+
+    /**
+     * Updates <code>cards list</code> with new cards list.
+     * 
+     * @param cards
+     */
+    public void setCardsList(Card[] cards) {
+        CARDS_LIST.setListData(cards);
     }
 
 }

@@ -38,9 +38,9 @@ public class GUI extends JFrame implements View {
     private final JSplitPane SPLIT_PANE = new JSplitPane();
 
     // App components
-    private final CardPanel CARD_PANEL = new CardPanel();
-    private final SidePanel SIDE_PANEL = new SidePanel(CARD_PANEL);
-    private final AppMenuBar MENU_BAR = new AppMenuBar(this, CARD_PANEL);
+    public final AppMenuBar MENU_BAR = new AppMenuBar(this);
+    public final SidePanel SIDE_PANEL = new SidePanel(this);
+    public final CardPanel CARD_PANEL = new CardPanel();
 
     /**
      * Initializes the GUI and shows it.
