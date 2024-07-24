@@ -154,7 +154,10 @@ class AppMenuBar extends JMenuBar implements View {
 
         // Open card
         OPEN.addActionListener((ActionEvent e) -> {
-            cardPanel.setCard(controller.getCardFromFile(gui));
+            Card card = controller.getCardFromFile(gui);
+            if (card != null) {
+                cardPanel.setCard(card);
+            }
         });
 
         // Save card

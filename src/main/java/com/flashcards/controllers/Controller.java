@@ -55,7 +55,7 @@ public class Controller {
     public Card getCardFromFile(Component component) {
 
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(Model.CARDS_FOLDER);
+        JFileChooser fileChooser = new JFileChooser(Utils.touchDirectory(Model.CARDS_FOLDER));
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
 
@@ -80,7 +80,7 @@ public class Controller {
     public void saveCard(Card card, Component component) {
 
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(Model.CARDS_FOLDER);
+        JFileChooser fileChooser = new JFileChooser(Utils.touchDirectory(Model.CARDS_FOLDER));
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
 
