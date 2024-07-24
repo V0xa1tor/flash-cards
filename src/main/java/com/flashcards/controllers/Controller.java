@@ -8,7 +8,6 @@ import javax.swing.filechooser.FileFilter;
 
 import com.flashcards.models.Card;
 import com.flashcards.models.Model;
-import com.flashcards.models.Utils;
 
 /**
  * This class controll card actions, like save and open a card.
@@ -25,7 +24,7 @@ public class Controller {
             if (f.isDirectory()) {
                 return true;
             }
-            String extension = Utils.getExtension(f).toLowerCase();
+            String extension = Model.getExtension(f).toLowerCase();
             if (extension != null) {
                 if (extension.equals(Card.EXTENSION.toLowerCase())) {
                     return true;
@@ -55,7 +54,7 @@ public class Controller {
     public Card getCardFromFile(Component component) {
 
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(Utils.touchDirectory(Model.CARDS_FOLDER));
+        JFileChooser fileChooser = new JFileChooser(Model.touchDirectory(Model.CARDS_FOLDER));
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
 
@@ -80,7 +79,7 @@ public class Controller {
     public void saveCard(Card card, Component component) {
 
         // File chooser
-        JFileChooser fileChooser = new JFileChooser(Utils.touchDirectory(Model.CARDS_FOLDER));
+        JFileChooser fileChooser = new JFileChooser(Model.touchDirectory(Model.CARDS_FOLDER));
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
 
