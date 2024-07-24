@@ -25,7 +25,7 @@ import com.flashcards.models.Card;
  * 
  * @see {@link com.flashcards.models.Card}
  */
-public class CardPanel extends JPanel {
+public class CardPanel extends JPanel implements View {
 
     // Current card
     private Card currentCard = new Card();
@@ -70,16 +70,8 @@ public class CardPanel extends JPanel {
         addButtonActions();
     }
 
-    /**
-     * Builds this view.
-     * 
-     * <p>
-     * Adds components in the right order, on the right place.
-     * </p>
-     * 
-     * @see {@link #style}
-     */
-    private void build() {
+    @Override
+    public void build() {
 
         // Card panel
         add(BOX_PANEL, BorderLayout.CENTER);
@@ -101,16 +93,8 @@ public class CardPanel extends JPanel {
         A_SCROLL_PANE.setViewportView(A_TEXT_AREA);
     }
 
-    /**
-     * Styles this view.
-     * 
-     * <p>
-     * Sets some properties like: layout, size, border, margin, font, etc.
-     * </p>
-     * 
-     * @see {@link #build}
-     */
-    private void style() {
+    @Override
+    public void style() {
 
         // Card panel
         setLayout(new BorderLayout(0, 10));

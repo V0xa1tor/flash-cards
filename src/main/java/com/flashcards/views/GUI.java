@@ -20,7 +20,7 @@ import com.flashcards.controllers.Controller;
  * 
  * @see {@link com.flashcards.App}
  */
-public class GUI extends JFrame {
+public class GUI extends JFrame implements View {
 
     // Look and Feel
     static {
@@ -66,16 +66,8 @@ public class GUI extends JFrame {
         setVisible(true);
     }
 
-    /**
-     * Builds this view.
-     * 
-     * <p>
-     * Adds components in the right order, on the right place.
-     * </p>
-     * 
-     * @see {@link #style}
-     */
-    private void build() {
+    @Override
+    public void build() {
 
         // GUI
         add(MENU_BAR, BorderLayout.NORTH);
@@ -89,16 +81,8 @@ public class GUI extends JFrame {
         SPLIT_PANE.setRightComponent(CARD_PANEL);
     }
 
-    /**
-     * Styles this view.
-     * 
-     * <p>
-     * Sets some properties like: layout, size, border, margin, font, etc.
-     * </p>
-     * 
-     * @see {@link #build}
-     */
-    private void style() {
+    @Override
+    public void style() {
 
         // GUI
         setTitle("Flash Cards");

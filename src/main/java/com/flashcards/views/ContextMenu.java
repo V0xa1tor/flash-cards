@@ -11,7 +11,7 @@ import javax.swing.JPopupMenu;
  * 
  * @see {@link com.flashcards.views.SidePanel}
  */
-class ContextMenu extends JPopupMenu {
+class ContextMenu extends JPopupMenu implements View {
 
     // Context menu item
     private static final JMenuItem DELETE = new JMenuItem();
@@ -46,30 +46,14 @@ class ContextMenu extends JPopupMenu {
         });
     }
 
-    /**
-     * Builds this view.
-     * 
-     * <p>
-     * Adds components in the right order, on the right place.
-     * </p>
-     * 
-     * @see {@link #style}
-     */
-    private void build() {
+    @Override
+    public void build() {
 
         add(DELETE);
     }
 
-    /**
-     * Styles this view.
-     * 
-     * <p>
-     * Sets some properties like: layout, size, border, margin, font, etc.
-     * </p>
-     * 
-     * @see {@link #build}
-     */
-    private void style() {
+    @Override
+    public void style() {
 
         DELETE.setText("Delete card");
     }

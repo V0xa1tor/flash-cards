@@ -23,7 +23,7 @@ import com.flashcards.models.Card;
  * 
  * @see {@link com.flashcards.views.SidePanel}
  */
-class SidePanel extends JPanel {
+class SidePanel extends JPanel implements View {
 
     // Controller
     private Controller controller;
@@ -122,16 +122,8 @@ class SidePanel extends JPanel {
         });
     }
 
-    /**
-     * Builds this view.
-     * 
-     * <p>
-     * Adds components in the right order, on the right place.
-     * </p>
-     * 
-     * @see {@link #style}
-     */
-    private void build() {
+    @Override
+    public void build() {
 
         // Side panel
         add(SCROLL_PANE);
@@ -140,16 +132,8 @@ class SidePanel extends JPanel {
         SCROLL_PANE.setViewportView(CARDS_LIST);
     }
 
-    /**
-     * Styles this view.
-     * 
-     * <p>
-     * Sets some properties like: layout, size, border, margin, font, etc.
-     * </p>
-     * 
-     * @see {@link #build}
-     */
-    private void style() {
+    @Override
+    public void style() {
 
         // Side panel
         setLayout(new BorderLayout());

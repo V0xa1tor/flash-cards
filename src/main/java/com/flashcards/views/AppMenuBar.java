@@ -34,7 +34,7 @@ import com.flashcards.models.Card;
  * </ul>
  * </p>
  */
-class AppMenuBar extends JMenuBar {
+class AppMenuBar extends JMenuBar implements View {
 
     // Controller
     private Controller controller;
@@ -85,16 +85,8 @@ class AppMenuBar extends JMenuBar {
         build();
     }
 
-    /**
-     * Builds this view.
-     * 
-     * <p>
-     * Adds components in the right order, on the right place.
-     * </p>
-     * 
-     * @see {@link #style}
-     */
-    private void build() {
+    @Override
+    public void build() {
 
         // Menu bar
         add(FILE_MENU);
@@ -110,16 +102,8 @@ class AppMenuBar extends JMenuBar {
         VIEW_MENU.add(EDITOR_MODE_CB);
     }
 
-    /**
-     * Styles this view.
-     * 
-     * <p>
-     * Sets some properties like: layout, size, border, margin, font, etc.
-     * </p>
-     * 
-     * @see {@link #build}
-     */
-    private void style() {
+    @Override
+    public void style() {
 
         // File menu
         FILE_MENU.setText("File");
