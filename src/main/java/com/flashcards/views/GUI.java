@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import com.flashcards.controllers.Controller;
+import com.jthemedetecor.OsThemeDetector;
 
 /**
  * The Graphical User Interface of <code>Flash cards App</code>.
@@ -42,6 +43,10 @@ public class GUI extends JFrame implements View {
     public final SidePanel SIDE_PANEL = new SidePanel(this);
     public final AppMenuBar MENU_BAR = new AppMenuBar(this);
 
+    // OS Theme
+    private static final OsThemeDetector detector = OsThemeDetector.getDetector();
+    public static Theme osTheme = detector.isDark() ? Theme.DARK : Theme.LIGHT;
+
     /**
      * Initializes the GUI and shows it.
      * <p>
@@ -62,6 +67,12 @@ public class GUI extends JFrame implements View {
 
         // Default view
         MENU_BAR.setDefaultView();
+
+        // OS Theme
+        detector.registerListener(isDark -> {
+            if (isDark) { setTheme(Theme.DARK); }
+            else { setTheme(Theme.LIGHT); }
+        }); setTheme(osTheme);
 
         // Show
         pack();
@@ -125,6 +136,14 @@ public class GUI extends JFrame implements View {
         } else {
             CARD_PANEL.setBorder(new EmptyBorder(10, 10, 10, 10));
         }
+    }
+
+    @Override
+    public void setTheme(Theme theme) {
+        osTheme = theme;
+
+        // Side panel
+        SIDE_PANEL.setTheme(theme);
     }
 
 }

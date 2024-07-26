@@ -1,6 +1,6 @@
 package com.flashcards.views;
 
-public interface View {
+interface View {
 
     /**
      * Styles this view.
@@ -24,4 +24,12 @@ public interface View {
      * @see {@link #style}
      */
     void build();
+
+    /**
+     * Sets view theme.
+     * 
+     * @param theme the theme to set
+     * @see {@link Theme}
+     */
+    void setTheme(Theme theme);
 }

@@ -190,8 +190,8 @@ public class CardPanel extends JPanel implements View {
         // reset size
         Q_PANEL.setPreferredSize(Q_PANEL.getMinimumSize());
         A_PANEL.setPreferredSize(A_PANEL.getMinimumSize());
-
-        // Reset minimun size
-        // FRAME.setMinimumSize(FRAME.getLayout().minimumLayoutSize(FRAME));
     }
+
+    @Override
+    public void setTheme(Theme theme) {}
 }

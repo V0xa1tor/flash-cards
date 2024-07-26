@@ -69,4 +69,7 @@ class ContextMenu extends JPopupMenu implements View {
         DELETE.setText("Delete card");
     }
 
+    @Override
+    public void setTheme(Theme theme) {}
+
 }

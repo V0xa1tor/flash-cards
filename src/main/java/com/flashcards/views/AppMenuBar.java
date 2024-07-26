@@ -246,4 +246,7 @@ class AppMenuBar extends JMenuBar implements View {
             setEditorModeSelected(EDITOR_MODE_CB.isSelected());
         });
     }
+
+    @Override
+    public void setTheme(Theme theme) {}
 }

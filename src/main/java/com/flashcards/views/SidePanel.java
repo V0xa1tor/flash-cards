@@ -1,28 +1,22 @@
 package com.flashcards.views;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.Icon;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.EmptyBorder;
 
 import com.flashcards.controllers.Controller;
@@ -199,7 +193,7 @@ class SidePanel extends JPanel implements View {
         LABEL.setText("Cards");
 
         // Refresh icon
-        refreshIcon.setImage(new ImageIcon("./src/main/resources/refresh_white.png",
+        refreshIcon.setImage(new ImageIcon("./src/main/resources/refresh_black.png",
                 "Refresh").getImage()
                 .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
 
@@ -209,12 +203,25 @@ class SidePanel extends JPanel implements View {
     }
 
     /**
-     * Gets all cards in default <code>Cards Folder</code> and sets in <code>Cards list</code>.
+     * Gets all cards in default <code>Cards Folder</code> and sets in
+     * <code>Cards list</code>.
      * 
      * @see {@link com.flashcards.models.Model#CARDS_FOLDER}
      */
     private void refreshCardsList() {
         CARDS_LIST.setListData(Model.getCardsList());
+    }
+
+    @Override
+    public void setTheme(Theme theme) {
+
+        String fileName;
+        if (theme == Theme.DARK) { fileName = "./src/main/resources/refresh_white.png"; }
+        else { fileName = "./src/main/resources/refresh_black.png"; }
+
+        refreshIcon.setImage(new ImageIcon(fileName,
+                "Refresh").getImage()
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
     }
 
 }
