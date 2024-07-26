@@ -206,7 +206,7 @@ class AppMenuBar extends JMenuBar implements View {
         // New card
         NEW.addActionListener((ActionEvent e) -> {
             gui.CARD_PANEL.setCard(new Card());
-            gui.SIDE_PANEL.setCardsList(Model.getCardsList());
+            gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
         });
 
         // Open card
@@ -214,14 +214,14 @@ class AppMenuBar extends JMenuBar implements View {
             Card card = controller.getCardFromFile(gui);
             if (card != null) {
                 gui.CARD_PANEL.setCard(card);
-                gui.SIDE_PANEL.setCardsList(Model.getCardsList());
+                gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
             }
         });
 
         // Save card
         SAVE.addActionListener((ActionEvent e) -> {
             controller.saveCard(gui.CARD_PANEL.getCard(), gui);
-            gui.SIDE_PANEL.setCardsList(Model.getCardsList());
+            gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
         });
     }
 

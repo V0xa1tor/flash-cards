@@ -32,10 +32,10 @@ class SidePanel extends JPanel implements View {
     private GUI gui;
 
     // Cards list
-    private static final JList<Card> CARDS_LIST = new JList<>();
+    public final JList<Card> CARDS_LIST = new JList<>();
 
     // Scroll pane
-    private static final JScrollPane SCROLL_PANE = new JScrollPane();
+    private final JScrollPane SCROLL_PANE = new JScrollPane();
 
     // Context menu
     private final ContextMenu CONTEXT_MENU = new ContextMenu();
@@ -140,15 +140,6 @@ class SidePanel extends JPanel implements View {
 
         // Scroll pane
         SCROLL_PANE.setMinimumSize(new Dimension(100, 200));
-    }
-
-    /**
-     * Updates <code>cards list</code> with new cards list.
-     * 
-     * @param cards
-     */
-    public void setCardsList(Card[] cards) {
-        CARDS_LIST.setListData(cards);
     }
 
 }
