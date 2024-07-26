@@ -146,7 +146,7 @@ class AppMenuBar extends JMenuBar implements View {
         setSidePanelSelected(true);
 
         // Editor mode
-        setEditorModeSelected(true);
+        setEditorModeSelected(false);
     }
 
     /**

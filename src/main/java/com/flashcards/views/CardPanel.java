@@ -172,6 +172,9 @@ public class CardPanel extends JPanel implements View {
     void setEditorModeVisible(boolean flag) {
 
         if (flag) {
+            // Enable both
+            Q_TEXT_AREA.setEnabled(true);
+            A_TEXT_AREA.setEnabled(true);
             // Show both
             Q_PANEL.setVisible(true);
             BOX_DIVIDER.setVisible(true);
@@ -179,6 +182,9 @@ public class CardPanel extends JPanel implements View {
             // Hide flip button
             FLIP_BUTTON.setVisible(false);
         } else {
+            // Disable both
+            Q_TEXT_AREA.setEnabled(false);
+            A_TEXT_AREA.setEnabled(false);
             // Show just one
             Q_PANEL.setVisible(true);
             BOX_DIVIDER.setVisible(false);
