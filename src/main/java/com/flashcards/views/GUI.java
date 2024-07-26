@@ -38,9 +38,9 @@ public class GUI extends JFrame implements View {
     private final JSplitPane SPLIT_PANE = new JSplitPane();
 
     // App components
-    public final AppMenuBar MENU_BAR = new AppMenuBar(this);
-    public final SidePanel SIDE_PANEL = new SidePanel(this);
     public final CardPanel CARD_PANEL = new CardPanel();
+    public final SidePanel SIDE_PANEL = new SidePanel(this);
+    public final AppMenuBar MENU_BAR = new AppMenuBar(this);
 
     /**
      * Initializes the GUI and shows it.
@@ -59,6 +59,9 @@ public class GUI extends JFrame implements View {
         // Set controller
         SIDE_PANEL.setController(controller);
         MENU_BAR.setController(controller);
+
+        // Default view
+        MENU_BAR.setDefaultView();
 
         // Show
         pack();
@@ -111,7 +114,7 @@ public class GUI extends JFrame implements View {
         // Change view
         if (flag) {
             ROOT_PANEL.add(SPLIT_PANE);
-            SPLIT_PANE.add(CARD_PANEL);
+            SPLIT_PANE.setRightComponent(CARD_PANEL);
         } else {
             ROOT_PANEL.add(CARD_PANEL);
         }

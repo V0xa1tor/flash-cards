@@ -66,7 +66,8 @@ class AppMenuBar extends JMenuBar implements View {
      * needed bind other views.
      * </p>
      * 
-     * @param gui the view wich have <code>Side panel</code> and <code>Card panel</code>
+     * @param gui the view wich have <code>Side panel</code> and
+     *            <code>Card panel</code>
      */
     AppMenuBar(GUI gui) {
         this.gui = gui;
@@ -107,9 +108,7 @@ class AppMenuBar extends JMenuBar implements View {
         VIEW_MENU.setText("View");
 
         SIDE_PANEL_CB.setText("Side panel");
-        SIDE_PANEL_CB.setSelected(true);
         EDITOR_MODE_CB.setText("Editor mode");
-        EDITOR_MODE_CB.setSelected(true);
     }
 
     /**
@@ -130,6 +129,29 @@ class AppMenuBar extends JMenuBar implements View {
     }
 
     /**
+     * Initializes the default view.
+     * <p>
+     * Default is:
+     * <ul>
+     * <li><strong>Side panel</strong>: on
+     * <li><strong>Editor mode</strong>: on
+     * </ul>
+     * </p>
+     * 
+     * @see {@link com.flashcards.App}
+     */
+    public void setDefaultView() {
+
+        // Side panel
+        SIDE_PANEL_CB.setSelected(true);
+        gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
+
+        // Editor mode
+        EDITOR_MODE_CB.setSelected(true);
+        gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
+    }
+
+    /**
      * Adds funcionality for <code>Card</code> files.
      * 
      * <p>
@@ -143,7 +165,7 @@ class AppMenuBar extends JMenuBar implements View {
             gui.CARD_PANEL.setCard(new Card());
             gui.SIDE_PANEL.setCardsList(Model.getCardsList());
         });
-        
+
         // Open card
         OPEN.addActionListener((ActionEvent e) -> {
             Card card = controller.getCardFromFile(gui);
@@ -152,7 +174,7 @@ class AppMenuBar extends JMenuBar implements View {
                 gui.SIDE_PANEL.setCardsList(Model.getCardsList());
             }
         });
-        
+
         // Save card
         SAVE.addActionListener((ActionEvent e) -> {
             controller.saveCard(gui.CARD_PANEL.getCard(), gui);
