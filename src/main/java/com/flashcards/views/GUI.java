@@ -125,12 +125,6 @@ public class GUI extends JFrame implements View {
         } else {
             CARD_PANEL.setBorder(new EmptyBorder(10, 10, 10, 10));
         }
-
-        // Reset minimun size
-        setMinimumSize(this.getLayout().minimumLayoutSize(this));
-
-        // revalidate all components (show changes)
-        ROOT_PANEL.revalidate();
     }
 
 }

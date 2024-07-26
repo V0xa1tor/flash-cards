@@ -143,12 +143,55 @@ class AppMenuBar extends JMenuBar implements View {
     public void setDefaultView() {
 
         // Side panel
-        SIDE_PANEL_CB.setSelected(true);
-        gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
+        setSidePanelSelected(true);
 
         // Editor mode
-        EDITOR_MODE_CB.setSelected(true);
-        gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
+        setEditorModeSelected(true);
+    }
+
+    /**
+     * Enables or disables <code>Side panel</code>.
+     * This method change Side panel Check box, change Side panel view in GUI and
+     * resets GUI size to fit the changes.
+     * 
+     * @param b the state to set
+     */
+    private void setSidePanelSelected(boolean b) {
+        if (gui != null) {
+            if (SIDE_PANEL_CB.isSelected() != b) {
+                SIDE_PANEL_CB.setSelected(b);
+            }
+            gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
+            resetGUISize();
+        }
+    }
+
+    /**
+     * Enables or disables <code>Editor mode</code>.
+     * This method change Editor mode Check box, change Editor mode view in Card
+     * panel and resets GUI size to fit the changes.
+     * 
+     * @param b the state to set
+     */
+    private void setEditorModeSelected(boolean b) {
+        if (gui != null) {
+            if (EDITOR_MODE_CB.isSelected() != b) {
+                EDITOR_MODE_CB.setSelected(b);
+            }
+            gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
+            resetGUISize();
+        }
+    }
+
+    /**
+     * Sets GUI minimum size to fit sub components.
+     * <p>
+     * Use this method to reset GUI size after view change.
+     * </p>
+     */
+    private void resetGUISize() {
+        gui.setMinimumSize(gui.getLayout().minimumLayoutSize(gui));
+        gui.revalidate();
     }
 
     /**
@@ -195,16 +238,12 @@ class AppMenuBar extends JMenuBar implements View {
 
         // Show/hide side panel
         SIDE_PANEL_CB.addActionListener((ActionEvent e) -> {
-            if (gui != null) {
-                gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
-            }
+            setSidePanelSelected(SIDE_PANEL_CB.isSelected());
         });
 
         // Enter/exit editor mode
         EDITOR_MODE_CB.addActionListener((ActionEvent e) -> {
-            if (gui.CARD_PANEL != null) {
-                gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
-            }
+            setEditorModeSelected(EDITOR_MODE_CB.isSelected());
         });
     }
 }
