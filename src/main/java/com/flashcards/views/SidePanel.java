@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 
 import com.flashcards.controllers.Controller;
 import com.flashcards.models.Card;
+import com.flashcards.models.Model;
 
 /**
  * View representing the <code>side panel</code>.
@@ -38,7 +39,7 @@ class SidePanel extends JPanel implements View {
     private final JScrollPane SCROLL_PANE = new JScrollPane();
 
     // Context menu
-    private final ContextMenu CONTEXT_MENU = new ContextMenu();
+    private final ContextMenu CONTEXT_MENU = new ContextMenu(this);
 
     /**
      * Initializes this view.
@@ -86,13 +87,21 @@ class SidePanel extends JPanel implements View {
             public void mouseClicked(MouseEvent e) {
 
                 // Double click
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                     gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
                 }
 
                 // Right click
                 if (e.getButton() == MouseEvent.BUTTON3) {
-                    CONTEXT_MENU.show(CARDS_LIST, e.getX(), e.getY());
+
+                    // Select with right click
+                    int i = CARDS_LIST.locationToIndex(e.getPoint());
+                    CARDS_LIST.setSelectedIndex(i);
+
+                    // Context menu
+                    if (!CARDS_LIST.isSelectionEmpty()) {
+                        CONTEXT_MENU.show(CARDS_LIST, e.getX(), e.getY());
+                    }
                 }
             }
         });
@@ -116,7 +125,10 @@ class SidePanel extends JPanel implements View {
 
                 // Delete key
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    // deleteFile();
+                    if (!CARDS_LIST.isSelectionEmpty()) {
+                        CARDS_LIST.getSelectedValue().delete();
+                        CARDS_LIST.setListData(Model.getCardsList());
+                    }
                 }
             }
         });

@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import com.flashcards.models.Model;
+
 /**
  * View representing the context menu when right click on
  * <code>side panel</code>
@@ -14,7 +16,10 @@ import javax.swing.JPopupMenu;
 class ContextMenu extends JPopupMenu implements View {
 
     // Context menu item
-    private static final JMenuItem DELETE = new JMenuItem();
+    private final JMenuItem DELETE = new JMenuItem();
+
+    // Side panel
+    private SidePanel sidePanel;
 
     /**
      * Initialize this view.
@@ -22,8 +27,11 @@ class ContextMenu extends JPopupMenu implements View {
      * <p>
      * Stylizes and builds this view. Also adds action behaviors.
      * </p>
+     * 
+     * @param sidePanel the side panel to bind
      */
-    ContextMenu() {
+    ContextMenu(SidePanel sidePanel) {
+        this.sidePanel = sidePanel;
 
         // Make
         style();
@@ -42,19 +50,22 @@ class ContextMenu extends JPopupMenu implements View {
 
         // Delete card
         DELETE.addActionListener((ActionEvent e) -> {
-            // deleteFile();
+            sidePanel.CARDS_LIST.getSelectedValue().delete();
+            sidePanel.CARDS_LIST.setListData(Model.getCardsList());
         });
     }
 
     @Override
     public void build() {
 
+        // Delete
         add(DELETE);
     }
 
     @Override
     public void style() {
 
+        // Delete
         DELETE.setText("Delete card");
     }
 
