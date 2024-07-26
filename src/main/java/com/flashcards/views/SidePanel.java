@@ -1,15 +1,29 @@
 package com.flashcards.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.EmptyBorder;
 
 import com.flashcards.controllers.Controller;
 import com.flashcards.models.Card;
@@ -29,17 +43,20 @@ class SidePanel extends JPanel implements View {
     // Controller
     private Controller controller;
 
-    // Card panel
+    // GUI
     private GUI gui;
-
-    // Cards list
-    public final JList<Card> CARDS_LIST = new JList<>();
-
-    // Scroll pane
-    private final JScrollPane SCROLL_PANE = new JScrollPane();
 
     // Context menu
     private final ContextMenu CONTEXT_MENU = new ContextMenu(this);
+
+    // Components
+    private final JLabel LABEL = new JLabel();
+    private final JButton REFRESH_BUTTON = new JButton();
+    public final JList<Card> CARDS_LIST = new JList<>();
+    private final JScrollPane SCROLL_PANE = new JScrollPane();
+
+    // Icon
+    private final ImageIcon refreshIcon = new ImageIcon();
 
     /**
      * Initializes this view.
@@ -56,6 +73,9 @@ class SidePanel extends JPanel implements View {
         // Make
         style();
         build();
+
+        // Get cards
+        refreshCardsList();
     }
 
     /**
@@ -72,6 +92,7 @@ class SidePanel extends JPanel implements View {
         if (controller != null) {
             addMouseActions();
             addKeyActions();
+            addButtonActions();
         }
     }
 
@@ -88,7 +109,9 @@ class SidePanel extends JPanel implements View {
 
                 // Double click
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    if (!CARDS_LIST.isSelectionEmpty()) {
+                        gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    }
                 }
 
                 // Right click
@@ -120,25 +143,46 @@ class SidePanel extends JPanel implements View {
 
                 // Enter key
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    if (!CARDS_LIST.isSelectionEmpty()) {
+                        gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    }
                 }
 
                 // Delete key
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
                     if (!CARDS_LIST.isSelectionEmpty()) {
                         CARDS_LIST.getSelectedValue().delete();
-                        CARDS_LIST.setListData(Model.getCardsList());
+                        refreshCardsList();
                     }
                 }
             }
         });
     }
 
+    /**
+     * Adds buttons behaviors to cards list.
+     * Like refresh card when press <code>Refresh button</code>.
+     */
+    private void addButtonActions() {
+
+        // Refresh
+        REFRESH_BUTTON.addActionListener((ActionEvent e) -> {
+            refreshCardsList();
+        });
+    }
+
     @Override
     public void build() {
 
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.add(LABEL);
+        panel.add(Box.createHorizontalGlue());
+        panel.add(REFRESH_BUTTON);
+
         // Side panel
-        add(SCROLL_PANE);
+        add(panel, BorderLayout.NORTH);
+        add(SCROLL_PANE, BorderLayout.CENTER);
 
         // Scroll pane
         SCROLL_PANE.setViewportView(CARDS_LIST);
@@ -149,9 +193,28 @@ class SidePanel extends JPanel implements View {
 
         // Side panel
         setLayout(new BorderLayout());
+        setMinimumSize(new Dimension(100, 200));
 
-        // Scroll pane
-        SCROLL_PANE.setMinimumSize(new Dimension(100, 200));
+        // Label
+        LABEL.setText("Cards");
+
+        // Refresh icon
+        refreshIcon.setImage(new ImageIcon("./src/main/resources/refresh_white.png",
+                "Refresh").getImage()
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+
+        // Refresh button
+        REFRESH_BUTTON.setIcon(refreshIcon);
+        REFRESH_BUTTON.setBorder(new EmptyBorder(0, 0, 0, 0));
+    }
+
+    /**
+     * Gets all cards in default <code>Cards Folder</code> and sets in <code>Cards list</code>.
+     * 
+     * @see {@link com.flashcards.models.Model#CARDS_FOLDER}
+     */
+    private void refreshCardsList() {
+        CARDS_LIST.setListData(Model.getCardsList());
     }
 
 }
