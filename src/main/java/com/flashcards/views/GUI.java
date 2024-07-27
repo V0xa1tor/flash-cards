@@ -2,7 +2,6 @@ package com.flashcards.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.LayoutManager;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -28,11 +27,14 @@ import com.jthemedetecor.OsThemeDetector;
 public class GUI extends JFrame implements View {
 
     // Look and Feel
+    private static boolean isSysLaf;
     static {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            isSysLaf = true;
         } catch (Exception ex) {
             ex.printStackTrace();
+            isSysLaf = false;
         }
     }
 
@@ -70,10 +72,12 @@ public class GUI extends JFrame implements View {
         MENU_BAR.setController(controller);
         
         // OS Theme
-        detector.registerListener(isDark -> {
-            if (isDark) { setTheme(Theme.DARK); }
-            else { setTheme(Theme.LIGHT); }
-        }); setTheme(osTheme);
+        if (isSysLaf) {
+            detector.registerListener(isDark -> {
+                if (isDark) { setTheme(Theme.DARK); }
+                else { setTheme(Theme.LIGHT); }
+            }); setTheme(osTheme);
+        }
         
         // Actions
         addSplitPaneActions();
@@ -177,8 +181,9 @@ public class GUI extends JFrame implements View {
     public void setTheme(Theme theme) {
         osTheme = theme;
 
-        // Side panel
+        // Views
         SIDE_PANEL.setTheme(theme);
+        CARD_PANEL.setTheme(theme);
     }
 
 }

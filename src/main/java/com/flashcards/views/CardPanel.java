@@ -1,6 +1,7 @@
 package com.flashcards.views;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
@@ -126,6 +127,7 @@ public class CardPanel extends JPanel implements View {
         Q_TEXT_AREA.setMargin(new Insets(10, 10, 10, 10));
         Q_TEXT_AREA.setWrapStyleWord(true);
         Q_TEXT_AREA.setLineWrap(true);
+        Q_TEXT_AREA.setDisabledTextColor(Color.BLACK);
 
         // ---------- Answer ----------
         A_PANEL.setLayout(new BorderLayout(0, 10));
@@ -138,6 +140,7 @@ public class CardPanel extends JPanel implements View {
         A_TEXT_AREA.setMargin(new Insets(10, 10, 10, 10));
         A_TEXT_AREA.setWrapStyleWord(true);
         A_TEXT_AREA.setLineWrap(true);
+        A_TEXT_AREA.setDisabledTextColor(Color.BLACK);
     }
 
     /**
@@ -238,5 +241,13 @@ public class CardPanel extends JPanel implements View {
     }
 
     @Override
-    public void setTheme(Theme theme) {}
+    public void setTheme(Theme theme) {
+        if (theme == Theme.DARK) {
+            Q_TEXT_AREA.setDisabledTextColor(Color.WHITE);
+            A_TEXT_AREA.setDisabledTextColor(Color.WHITE);
+        } else {
+            Q_TEXT_AREA.setDisabledTextColor(Color.BLACK);
+            A_TEXT_AREA.setDisabledTextColor(Color.BLACK);
+        }
+    }
 }
