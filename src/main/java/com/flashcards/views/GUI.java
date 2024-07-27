@@ -141,6 +141,7 @@ public class GUI extends JFrame implements View {
      * </p>
      */
     void resetSize() {
+        SPLIT_PANE.resetToPreferredSizes();
         setMinimumSize(this.getLayout().minimumLayoutSize(this));
         revalidate();
     }
