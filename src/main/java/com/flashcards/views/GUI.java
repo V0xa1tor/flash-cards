@@ -2,12 +2,16 @@ package com.flashcards.views;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.flashcards.controllers.Controller;
 import com.jthemedetecor.OsThemeDetector;
@@ -64,20 +68,39 @@ public class GUI extends JFrame implements View {
         // Set controller
         SIDE_PANEL.setController(controller);
         MENU_BAR.setController(controller);
-
-        // Default view
-        MENU_BAR.setDefaultView();
-
+        
         // OS Theme
         detector.registerListener(isDark -> {
             if (isDark) { setTheme(Theme.DARK); }
             else { setTheme(Theme.LIGHT); }
         }); setTheme(osTheme);
-
+        
+        // Actions
+        addSplitPaneActions();
+        
         // Show
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        
+        // Default view
+        MENU_BAR.setDefaultView();
+    }
+
+    private void addSplitPaneActions() {
+
+        // Divider
+        ((BasicSplitPaneUI) SPLIT_PANE.getUI())
+                .getDivider().addMouseListener(new MouseAdapter() {
+
+            // Fit content
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    SPLIT_PANE.setDividerLocation(-1);
+                }
+            }
+        });
     }
 
     @Override
@@ -109,6 +132,17 @@ public class GUI extends JFrame implements View {
         SPLIT_PANE.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
         SPLIT_PANE.setBorder(new EmptyBorder(10, 10, 10, 10));
         SPLIT_PANE.setDividerSize(10);
+    }
+
+    /**
+     * Sets GUI minimum size to fit sub components.
+     * <p>
+     * Use this method to reset GUI size after view change.
+     * </p>
+     */
+    void resetSize() {
+        setMinimumSize(this.getLayout().minimumLayoutSize(this));
+        revalidate();
     }
 
     /**

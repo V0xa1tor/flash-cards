@@ -1,19 +1,21 @@
 package com.flashcards.views;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
 import com.flashcards.models.Card;
 
@@ -30,8 +32,8 @@ public class CardPanel extends JPanel implements View {
     // Current card
     private Card currentCard = new Card();
 
-    // Box panel
-    private final JPanel BOX_PANEL = new JPanel();
+    // Main panel (panel with card)
+    private final JPanel MAIN_PANEL = new JPanel();
 
     // Buttons to play Quiz Card
     private final JButton FLIP_BUTTON = new JButton();
@@ -44,8 +46,8 @@ public class CardPanel extends JPanel implements View {
     private final JTextArea Q_TEXT_AREA = new JTextArea();
     private final JScrollPane Q_SCROLL_PANE = new JScrollPane();
 
-    // Divider
-    private final Component BOX_DIVIDER = Box.createHorizontalStrut(10);
+    // Split pane
+    private final JSplitPane SPLIT_PANE = new JSplitPane();
 
     // Answer
     private final JPanel A_PANEL = new JPanel();
@@ -68,25 +70,28 @@ public class CardPanel extends JPanel implements View {
 
         // Actions
         addButtonActions();
+        addSplitPaneActions();
     }
 
     @Override
     public void build() {
 
         // Card panel
-        add(BOX_PANEL, BorderLayout.CENTER);
+        add(MAIN_PANEL, BorderLayout.CENTER);
         add(FLIP_BUTTON, BorderLayout.SOUTH);
 
-        // Box panel
-        BOX_PANEL.add(Q_PANEL);
-        BOX_PANEL.add(BOX_DIVIDER);
-        BOX_PANEL.add(A_PANEL);
+        // Main panel
+        MAIN_PANEL.add(SPLIT_PANE);
+
+        // Split pane
+        SPLIT_PANE.setLeftComponent(Q_PANEL);
+        SPLIT_PANE.setRightComponent(A_PANEL);
 
         // Question
         Q_PANEL.add(Q_LABEL, BorderLayout.NORTH);
         Q_PANEL.add(Q_SCROLL_PANE, BorderLayout.CENTER);
         Q_SCROLL_PANE.setViewportView(Q_TEXT_AREA);
-        
+
         // Answer
         A_PANEL.add(A_LABEL, BorderLayout.NORTH);
         A_PANEL.add(A_SCROLL_PANE, BorderLayout.CENTER);
@@ -99,8 +104,11 @@ public class CardPanel extends JPanel implements View {
         // Card panel
         setLayout(new BorderLayout(0, 10));
 
-        // Box panel
-        BOX_PANEL.setLayout(new BoxLayout(BOX_PANEL, BoxLayout.X_AXIS));
+        // Main panel
+        MAIN_PANEL.setLayout(new BoxLayout(MAIN_PANEL, BoxLayout.X_AXIS));
+
+        // Split pane
+        SPLIT_PANE.setDividerSize(10);
 
         // Buttons
         FLIP_BUTTON.setText("Flip card");
@@ -144,6 +152,22 @@ public class CardPanel extends JPanel implements View {
         });
     }
 
+    private void addSplitPaneActions() {
+
+        // Divider
+        ((BasicSplitPaneUI) SPLIT_PANE.getUI())
+                .getDivider().addMouseListener(new MouseAdapter() {
+
+            // Resize when double click
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    resetDividerLocation();
+                }
+            }
+        });
+    }
+
     /**
      * Sets the card which is current being displayed.
      * 
@@ -165,37 +189,52 @@ public class CardPanel extends JPanel implements View {
     }
 
     /**
+     * Sets divider location on midle.
+     */
+    void resetDividerLocation() {
+        SPLIT_PANE.setDividerLocation(0.5);
+    }
+
+    /**
      * Shows or hides editor mode view.
      * 
      * @param flag the visibility to set
      */
     void setEditorModeVisible(boolean flag) {
 
+        // Remove
+        MAIN_PANEL.removeAll();
+
         if (flag) {
+
             // Enable both
             Q_TEXT_AREA.setEnabled(true);
             A_TEXT_AREA.setEnabled(true);
-            // Show both
+
+            // Show split pane
+            MAIN_PANEL.add(SPLIT_PANE);
+            SPLIT_PANE.setLeftComponent(Q_PANEL);
             Q_PANEL.setVisible(true);
-            BOX_DIVIDER.setVisible(true);
+            SPLIT_PANE.setRightComponent(A_PANEL);
             A_PANEL.setVisible(true);
+            
             // Hide flip button
             FLIP_BUTTON.setVisible(false);
         } else {
+
             // Disable both
             Q_TEXT_AREA.setEnabled(false);
             A_TEXT_AREA.setEnabled(false);
+
             // Show just one
+            MAIN_PANEL.add(Q_PANEL);
             Q_PANEL.setVisible(true);
-            BOX_DIVIDER.setVisible(false);
+            MAIN_PANEL.add(A_PANEL);
             A_PANEL.setVisible(false);
+
             // Show flip button
             FLIP_BUTTON.setVisible(true);
         }
-
-        // reset size
-        Q_PANEL.setPreferredSize(Q_PANEL.getMinimumSize());
-        A_PANEL.setPreferredSize(A_PANEL.getMinimumSize());
     }
 
     @Override

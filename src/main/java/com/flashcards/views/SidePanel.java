@@ -35,7 +35,7 @@ import com.flashcards.models.Model;
 class SidePanel extends JPanel implements View {
 
     // Controller
-    private Controller controller;
+    // private Controller controller;
 
     // GUI
     private GUI gui;
@@ -80,7 +80,7 @@ class SidePanel extends JPanel implements View {
      * @see {@link #addViewActions}
      */
     public void setController(Controller controller) {
-        this.controller = controller;
+        // this.controller = controller;
 
         // Actions
         if (controller != null) {

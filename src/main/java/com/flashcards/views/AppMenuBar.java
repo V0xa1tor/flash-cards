@@ -162,7 +162,7 @@ class AppMenuBar extends JMenuBar implements View {
                 SIDE_PANEL_CB.setSelected(b);
             }
             gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
-            resetGUISize();
+            gui.resetSize();
         }
     }
 
@@ -179,19 +179,8 @@ class AppMenuBar extends JMenuBar implements View {
                 EDITOR_MODE_CB.setSelected(b);
             }
             gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
-            resetGUISize();
+            gui.resetSize();
         }
-    }
-
-    /**
-     * Sets GUI minimum size to fit sub components.
-     * <p>
-     * Use this method to reset GUI size after view change.
-     * </p>
-     */
-    private void resetGUISize() {
-        gui.setMinimumSize(gui.getLayout().minimumLayoutSize(gui));
-        gui.revalidate();
     }
 
     /**
@@ -239,11 +228,13 @@ class AppMenuBar extends JMenuBar implements View {
         // Show/hide side panel
         SIDE_PANEL_CB.addActionListener((ActionEvent e) -> {
             setSidePanelSelected(SIDE_PANEL_CB.isSelected());
+            gui.CARD_PANEL.resetDividerLocation();
         });
-
+        
         // Enter/exit editor mode
         EDITOR_MODE_CB.addActionListener((ActionEvent e) -> {
             setEditorModeSelected(EDITOR_MODE_CB.isSelected());
+            gui.CARD_PANEL.resetDividerLocation();
         });
     }
 
