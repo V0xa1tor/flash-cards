@@ -83,11 +83,18 @@ public class Controller {
         fileChooser.setFileFilter(cardFileFilter);
         if (fileChooser.showSaveDialog(component) == JFileChooser.APPROVE_OPTION) {
 
-            // Set name and location to card
-            String filePath = fileChooser.getSelectedFile().getPath();
-            card = new Card(filePath + "." + Card.EXTENSION,
-                    card.getQuestion(),
-                    card.getAnswer());
+            // Get card name and location
+            String cardPath;
+            String fileFolder = fileChooser.getSelectedFile().getParent();
+            String fileName = fileChooser.getSelectedFile().getName();
+            if (Card.EXTENSION.equals(Model.getExtension(fileName))) {
+                cardPath = fileFolder + "/" + fileName;
+            } else {
+                cardPath = fileFolder + "/" + fileName + "." + Card.EXTENSION;
+            }
+
+            // The card
+            card = new Card(cardPath, card.getQuestion(), card.getAnswer());
 
             // Save card
             Model.serializeCard(card);
