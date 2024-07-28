@@ -85,7 +85,7 @@ public class Controller {
 
             // Get card name and location
             String cardPath;
-            String fileFolder = fileChooser.getSelectedFile().getParent();
+            String fileFolder = fileChooser.getCurrentDirectory().toString();
             String fileName = fileChooser.getSelectedFile().getName();
             if (Card.EXTENSION.equals(Model.getExtension(fileName))) {
                 cardPath = fileFolder + "/" + fileName;
