@@ -16,15 +16,15 @@ import com.flashcards.models.Model;
  */
 public class Controller {
 
-    // Quiz Card (*.card) file filter
-    private FileFilter cardFileFilter = new FileFilter() {
+    // Flash Card (*.card) file filter
+    private static FileFilter cardFileFilter = new FileFilter() {
 
         @Override
         public boolean accept(File f) {
             if (f.isDirectory()) {
                 return true;
             }
-            String extension = Model.getExtension(f).toLowerCase();
+            String extension = Model.getFileExtension(f).toLowerCase();
             if (extension != null) {
                 if (extension.equals(Card.EXTENSION.toLowerCase())) {
                     return true;
@@ -38,7 +38,7 @@ public class Controller {
 
         @Override
         public String getDescription() {
-            return "Quiz card (*.card)";
+            return "Flash card (*.card)";
         }
 
     };
@@ -51,7 +51,7 @@ public class Controller {
      * @return the card deserialized from selected file
      * @see {@link com.flashcards.models.Card}
      */
-    public Card getCardFromFile(Component component) {
+    public static Card openCard(Component component) {
 
         // File chooser
         JFileChooser fileChooser = new JFileChooser(Model.touchDirectory(Model.CARDS_FOLDER));
@@ -59,7 +59,7 @@ public class Controller {
         if (fileChooser.showOpenDialog(component) == JFileChooser.APPROVE_OPTION) {
 
             // Get Card object from file
-            Card card = Model.deserializeCard(fileChooser.getSelectedFile());
+            Card card = Model.getCard(fileChooser.getSelectedFile());
 
             // Return card
             return card;
@@ -76,7 +76,7 @@ public class Controller {
      * Can be <code>null</code>
      * @see {@link com.flashcards.models.Card}
      */
-    public void saveCard(Card card, Component component) {
+    public static void saveCard(Card card, Component component) {
 
         // File chooser
         JFileChooser fileChooser = new JFileChooser(Model.touchDirectory(Model.CARDS_FOLDER));
@@ -87,18 +87,41 @@ public class Controller {
             String cardPath;
             String fileFolder = fileChooser.getCurrentDirectory().toString();
             String fileName = fileChooser.getSelectedFile().getName();
-            if (Card.EXTENSION.equals(Model.getExtension(fileName))) {
+            if (Card.EXTENSION.equals(Model.getFileExtension(fileName))) {
                 cardPath = fileFolder + "/" + fileName;
             } else {
                 cardPath = fileFolder + "/" + fileName + "." + Card.EXTENSION;
             }
-
+            
             // The card
-            card = new Card(cardPath, card.getQuestion(), card.getAnswer());
+            card = new Card(new File(cardPath), card.getQuestion(), card.getAnswer());
 
             // Save card
-            Model.serializeCard(card);
+            Model.setCard(card, card.getFile());
         }
     }
 
+    /**
+     * Deletes a card
+     * 
+     * @param card the card to delete
+     */
+    public static void deleteCard(Card card) {
+        card.getFile().delete();
+    }
+    
+    /**
+     * Renames a card
+     * 
+     * @param card the card to rename
+     * @param name the new name
+     */
+    public static void renameCard(Card card, String name) {
+
+        // Save new card
+        Model.setCard(card, new File(card.getFile().getParentFile(), name));
+
+        // Delete old card
+        deleteCard(card);
+    }
 }
