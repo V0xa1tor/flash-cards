@@ -4,49 +4,42 @@ import java.io.File;
 
 /**
  * The Card used in <code>Flash Cards App</code>.
+ * 
  * <p>
- * Used to save question and answer (serialized).
+ * Used to save question and answer.
  * </p>
+ * 
+ * @see {@link com.flashcards.App}
  */
-public class Card extends File {
+public class Card {
 
-    public static final long serialVersionUID = 1L;
+    public static final String EXTENSION = "card";
 
-    public static final transient String EXTENSION = "card";
+    private File file;
 
     private String question;
     private String answer;
 
     /**
-     * Creates a card with a pathname, question and answer texts.
-     * 
-     * @param pathname the pathname of the card
-     * @param question the question text
-     * @param answer   the answer text
-     */
-    public Card(String pathname, String question, String answer) {
-        super(pathname);
-        setQuestion(question);
-        setAnswer(answer);
-    }
-
-    /**
-     * Creates a card with a question and answer texts.
-     * Also sets the name to "card.card".
-     * 
-     * @param question the question text
-     * @param answer   the answer text
-     */
-    public Card(String question, String answer) {
-        this("card." + EXTENSION, question, answer);
-    }
-
-    /**
-     * Creates a card with empty question and answer.
-     * Also sets the name to "card.card".
+     * Creates a card with empty question, answer and file.
      */
     public Card() {
-        this("", "");
+        setFile(null);
+        setQuestion("");
+        setAnswer("");
+    }
+
+    /**
+     * Creates a card with a question, answer and file.
+     * 
+     * @param file     the file
+     * @param question the question
+     * @param answer   the answer
+     */
+    public Card(File file, String question, String answer) {
+        setFile(file);
+        setQuestion(question);
+        setAnswer(answer);
     }
 
     /**
@@ -86,16 +79,31 @@ public class Card extends File {
     }
 
     /**
-     * Get card file name (without extension)
+     * Gets card file reference
+     * 
+     * @return the card file reference
+     */
+    public File getFile() {
+        return file;
+    }
+
+    /**
+     * Sets card file reference
+     * 
+     * @param file the file reference to set
+     */
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    /**
+     * Gets card file name
      * 
      * @return the Card file name
      */
     @Override
     public String toString() {
-        String name = this.getName();
-        int i = name.lastIndexOf('.');
-        name = name.substring(0, i);
-        return name;
+        return Model.getFileName(file);
     }
 
 }

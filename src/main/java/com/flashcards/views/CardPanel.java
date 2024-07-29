@@ -22,81 +22,74 @@ import com.flashcards.models.Card;
 
 /**
  * View representing Card Panel.
- * This panel contains the card (question and answer) and the buttons to with,
- * like <code>Flip</code> card, <code>Next</code> and <code>previous</code>
- * card.
+ * 
+ * <p>
+ * This panel contains the card (question and answer)
+ * and the buttons to play with, like <code>Flip</code> card,
+ * <code>Next</code> and <code>previous</code> card.
+ * </p>
  * 
  * @see {@link com.flashcards.models.Card}
  */
 public class CardPanel extends JPanel implements View {
 
+    // GUI
+    private GUI gui;
+
     // Current card
-    private Card currentCard = new Card();
+    private Card currentCard;
 
     // Main panel (panel with card)
-    private final JPanel MAIN_PANEL = new JPanel();
+    private JPanel mainPanel;
 
     // Buttons to play Quiz Card
-    private final JButton FLIP_BUTTON = new JButton();
-    // private final JButton PREVIOUS_BUTTON = new JButton();
-    // private final JButton NEXT_BUTTON = new JButton();
+    private JButton flipButton;
 
     // Question
-    private final JPanel Q_PANEL = new JPanel();
-    private final JLabel Q_LABEL = new JLabel();
-    private final JTextArea Q_TEXT_AREA = new JTextArea();
-    private final JScrollPane Q_SCROLL_PANE = new JScrollPane();
+    private JPanel qPanel;
+    private JLabel qLabel;
+    private JTextArea qTextArea;
+    private JScrollPane qScrollPane;
 
     // Split pane
-    private final JSplitPane SPLIT_PANE = new JSplitPane();
+    private JSplitPane splitPane;
 
     // Answer
-    private final JPanel A_PANEL = new JPanel();
-    private final JLabel A_LABEL = new JLabel();
-    private final JTextArea A_TEXT_AREA = new JTextArea();
-    private final JScrollPane A_SCROLL_PANE = new JScrollPane();
+    private JPanel aPanel;
+    private JLabel aLabel;
+    private JTextArea aTextArea;
+    private JScrollPane aScrollPane;
 
     /**
-     * Initializes this view.
+     * Initialize this view.
      * 
      * <p>
-     * Stylizes and builds this view. Also adds action behaviors.
+     * Stylizes, builds and add actions.
      * </p>
+     * 
+     * @param gui the GUI
      */
-    CardPanel() {
+    CardPanel(GUI gui) {
 
-        // Make
+        // Init
+        this.gui = gui;
+        currentCard = new Card();
+        mainPanel = new JPanel();
+        flipButton = new JButton();
+        qPanel = new JPanel();
+        qLabel = new JLabel();
+        qTextArea = new JTextArea();
+        qScrollPane = new JScrollPane();
+        splitPane = new JSplitPane();
+        aPanel = new JPanel();
+        aLabel = new JLabel();
+        aTextArea = new JTextArea();
+        aScrollPane = new JScrollPane();
+
+        // Make view
         style();
         build();
-
-        // Actions
-        addButtonActions();
-        addSplitPaneActions();
-    }
-
-    @Override
-    public void build() {
-
-        // Card panel
-        add(MAIN_PANEL, BorderLayout.CENTER);
-        add(FLIP_BUTTON, BorderLayout.SOUTH);
-
-        // Main panel
-        MAIN_PANEL.add(SPLIT_PANE);
-
-        // Split pane
-        SPLIT_PANE.setLeftComponent(Q_PANEL);
-        SPLIT_PANE.setRightComponent(A_PANEL);
-
-        // Question
-        Q_PANEL.add(Q_LABEL, BorderLayout.NORTH);
-        Q_PANEL.add(Q_SCROLL_PANE, BorderLayout.CENTER);
-        Q_SCROLL_PANE.setViewportView(Q_TEXT_AREA);
-
-        // Answer
-        A_PANEL.add(A_LABEL, BorderLayout.NORTH);
-        A_PANEL.add(A_SCROLL_PANE, BorderLayout.CENTER);
-        A_SCROLL_PANE.setViewportView(A_TEXT_AREA);
+        addActions();
     }
 
     @Override
@@ -106,69 +99,64 @@ public class CardPanel extends JPanel implements View {
         setLayout(new BorderLayout(0, 10));
 
         // Main panel
-        MAIN_PANEL.setLayout(new BoxLayout(MAIN_PANEL, BoxLayout.X_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
         // Split pane
-        SPLIT_PANE.setDividerSize(10);
+        splitPane.setDividerSize(10);
 
         // Buttons
-        FLIP_BUTTON.setText("Flip card");
-        // PREVIOUS_BUTTON.setText("Previous");
-        // NEXT_BUTTON.setText("Next");
+        flipButton.setText("Flip card");
 
         // ---------- Question ----------
-        Q_PANEL.setLayout(new BorderLayout(0, 10));
-        Q_PANEL.setMinimumSize(new Dimension(200, 150));
+        qPanel.setLayout(new BorderLayout(0, 10));
+        qPanel.setMinimumSize(new Dimension(200, 150));
 
-        Q_LABEL.setText("Question");
-        Q_LABEL.setHorizontalAlignment(JLabel.CENTER);
-        Q_LABEL.setFont(new Font(null, Font.BOLD, 20));
+        qLabel.setText("Question");
+        qLabel.setHorizontalAlignment(JLabel.CENTER);
+        qLabel.setFont(new Font(null, Font.BOLD, 20));
 
-        Q_TEXT_AREA.setMargin(new Insets(10, 10, 10, 10));
-        Q_TEXT_AREA.setWrapStyleWord(true);
-        Q_TEXT_AREA.setLineWrap(true);
-        Q_TEXT_AREA.setDisabledTextColor(Color.BLACK);
+        qTextArea.setMargin(new Insets(10, 10, 10, 10));
+        qTextArea.setWrapStyleWord(true);
+        qTextArea.setLineWrap(true);
+        qTextArea.setDisabledTextColor(Color.BLACK);
 
         // ---------- Answer ----------
-        A_PANEL.setLayout(new BorderLayout(0, 10));
-        A_PANEL.setMinimumSize(new Dimension(200, 150));
+        aPanel.setLayout(new BorderLayout(0, 10));
+        aPanel.setMinimumSize(new Dimension(200, 150));
 
-        A_LABEL.setText("Answer");
-        A_LABEL.setHorizontalAlignment(JLabel.CENTER);
-        A_LABEL.setFont(new Font(null, Font.BOLD, 20));
+        aLabel.setText("Answer");
+        aLabel.setHorizontalAlignment(JLabel.CENTER);
+        aLabel.setFont(new Font(null, Font.BOLD, 20));
 
-        A_TEXT_AREA.setMargin(new Insets(10, 10, 10, 10));
-        A_TEXT_AREA.setWrapStyleWord(true);
-        A_TEXT_AREA.setLineWrap(true);
-        A_TEXT_AREA.setDisabledTextColor(Color.BLACK);
+        aTextArea.setMargin(new Insets(10, 10, 10, 10));
+        aTextArea.setWrapStyleWord(true);
+        aTextArea.setLineWrap(true);
+        aTextArea.setDisabledTextColor(Color.BLACK);
     }
 
-    /**
-     * Adds button actions to play with cards.
-     */
-    private void addButtonActions() {
+    @Override
+    public void build() {
 
-        // Flip question/answer
-        FLIP_BUTTON.addActionListener((ActionEvent e) -> {
-            Q_PANEL.setVisible(!Q_PANEL.isVisible());
-            A_PANEL.setVisible(!A_PANEL.isVisible());
-        });
-    }
+        // Card panel
+        add(mainPanel, BorderLayout.CENTER);
+        add(flipButton, BorderLayout.SOUTH);
 
-    private void addSplitPaneActions() {
+        // Main panel
+        mainPanel.add(splitPane);
 
-        // Divider
-        ((BasicSplitPaneUI) SPLIT_PANE.getUI())
-                .getDivider().addMouseListener(new MouseAdapter() {
+        // Split pane
+        splitPane.setLeftComponent(qPanel);
+        splitPane.setRightComponent(aPanel);
 
-            // Resize when double click
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    resetDividerLocation();
-                }
-            }
-        });
+        // Question
+        qPanel.add(qLabel, BorderLayout.NORTH);
+        qPanel.add(qScrollPane, BorderLayout.CENTER);
+        qScrollPane.setViewportView(qTextArea);
+
+        // Answer
+        aPanel.add(aLabel, BorderLayout.NORTH);
+        aPanel.add(aScrollPane, BorderLayout.CENTER);
+        aScrollPane.setViewportView(aTextArea);
     }
 
     /**
@@ -176,26 +164,26 @@ public class CardPanel extends JPanel implements View {
      * 
      * @param card the card to set to current
      */
-    public void setCard(Card card) {
+    void setCard(Card card) {
         currentCard = card;
-        Q_TEXT_AREA.setText(currentCard.getQuestion());
-        A_TEXT_AREA.setText(currentCard.getAnswer());
+        qTextArea.setText(currentCard.getQuestion());
+        aTextArea.setText(currentCard.getAnswer());
     }
 
     /**
      * Gets the card which is current being displayed.
      */
-    public Card getCard() {
-        currentCard.setQuestion(Q_TEXT_AREA.getText());
-        currentCard.setAnswer(A_TEXT_AREA.getText());
+    Card getCard() {
+        currentCard.setQuestion(qTextArea.getText());
+        currentCard.setAnswer(aTextArea.getText());
         return currentCard;
     }
 
     /**
-     * Sets divider location on midle.
+     * Sets divider location to midle.
      */
     void resetDividerLocation() {
-        SPLIT_PANE.setDividerLocation(0.5);
+        splitPane.setDividerLocation(0.5);
     }
 
     /**
@@ -206,48 +194,88 @@ public class CardPanel extends JPanel implements View {
     void setEditorModeVisible(boolean flag) {
 
         // Remove
-        MAIN_PANEL.removeAll();
+        mainPanel.removeAll();
 
         if (flag) {
 
             // Enable both
-            Q_TEXT_AREA.setEnabled(true);
-            A_TEXT_AREA.setEnabled(true);
+            qTextArea.setEnabled(true);
+            aTextArea.setEnabled(true);
 
             // Show split pane
-            MAIN_PANEL.add(SPLIT_PANE);
-            SPLIT_PANE.setLeftComponent(Q_PANEL);
-            Q_PANEL.setVisible(true);
-            SPLIT_PANE.setRightComponent(A_PANEL);
-            A_PANEL.setVisible(true);
-            
+            mainPanel.add(splitPane);
+            splitPane.setLeftComponent(qPanel);
+            qPanel.setVisible(true);
+            splitPane.setRightComponent(aPanel);
+            aPanel.setVisible(true);
+
             // Hide flip button
-            FLIP_BUTTON.setVisible(false);
+            flipButton.setVisible(false);
         } else {
 
             // Disable both
-            Q_TEXT_AREA.setEnabled(false);
-            A_TEXT_AREA.setEnabled(false);
+            qTextArea.setEnabled(false);
+            aTextArea.setEnabled(false);
 
             // Show just one
-            MAIN_PANEL.add(Q_PANEL);
-            Q_PANEL.setVisible(true);
-            MAIN_PANEL.add(A_PANEL);
-            A_PANEL.setVisible(false);
+            mainPanel.add(qPanel);
+            qPanel.setVisible(true);
+            mainPanel.add(aPanel);
+            aPanel.setVisible(false);
 
             // Show flip button
-            FLIP_BUTTON.setVisible(true);
+            flipButton.setVisible(true);
         }
     }
 
     @Override
     public void setTheme(Theme theme) {
         if (theme == Theme.DARK) {
-            Q_TEXT_AREA.setDisabledTextColor(Color.WHITE);
-            A_TEXT_AREA.setDisabledTextColor(Color.WHITE);
+            qTextArea.setDisabledTextColor(Color.WHITE);
+            aTextArea.setDisabledTextColor(Color.WHITE);
         } else {
-            Q_TEXT_AREA.setDisabledTextColor(Color.BLACK);
-            A_TEXT_AREA.setDisabledTextColor(Color.BLACK);
+            qTextArea.setDisabledTextColor(Color.BLACK);
+            aTextArea.setDisabledTextColor(Color.BLACK);
         }
     }
+
+    @Override
+    public void addActions() {
+
+        // Actions
+        addButtonActions();
+        addSplitPaneActions();
+    }
+
+    /**
+     * Adds button actions to play with cards.
+     */
+    private void addButtonActions() {
+
+        // Flip question/answer
+        flipButton.addActionListener((ActionEvent e) -> {
+            qPanel.setVisible(!qPanel.isVisible());
+            aPanel.setVisible(!aPanel.isVisible());
+        });
+    }
+
+    /**
+     * Adds Split pane actions for {@link #splitPane}.
+     */
+    private void addSplitPaneActions() {
+
+        // Divider
+        ((BasicSplitPaneUI) splitPane.getUI())
+                .getDivider().addMouseListener(new MouseAdapter() {
+
+            // Relocates to midle when double click
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    resetDividerLocation();
+                }
+            }
+        });
+    }
+
 }

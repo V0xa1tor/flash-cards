@@ -12,14 +12,13 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 
-import com.flashcards.controllers.Controller;
 import com.jthemedetecor.OsThemeDetector;
 
 /**
  * The Graphical User Interface of <code>Flash cards App</code>.
  * 
  * <p>
- * This is the main view class, which implements all view classes
+ * This is the main view class, which implements all view classes.
  * </p>
  * 
  * @see {@link com.flashcards.App}
@@ -38,39 +37,33 @@ public class GUI extends JFrame implements View {
         }
     }
 
-    // Root panel
-    private final JPanel ROOT_PANEL = new JPanel();
-
-    // Split pane (Side panel + Card panel)
-    private final JSplitPane SPLIT_PANE = new JSplitPane();
-
-    // App components
-    public final CardPanel CARD_PANEL = new CardPanel();
-    public final SidePanel SIDE_PANEL = new SidePanel(this);
-    public final AppMenuBar MENU_BAR = new AppMenuBar(this);
-
     // OS Theme
     private static final OsThemeDetector detector = OsThemeDetector.getDetector();
     public static Theme osTheme = detector.isDark() ? Theme.DARK : Theme.LIGHT;
 
+    // Root panel
+    private JPanel rootPanel;
+
+    // Split pane (Side panel + Card panel)
+    private JSplitPane splitPane;
+
+    // App components
+    AppMenuBar menuBar;
+    SidePanel sidePanel;
+    CardPanel cardPanel;
+
     /**
      * Initializes the GUI and shows it.
-     * <p>
-     * Also sets the controller.
-     * </p>
-     * 
-     * @see {@link com.flashcards.controllers.Controller}
      */
-    public GUI(Controller controller) {
+    public GUI() {
 
-        // Make
-        style();
-        build();
+        // Init
+        rootPanel = new JPanel();
+        splitPane = new JSplitPane();
+        menuBar   = new AppMenuBar(this);
+        sidePanel = new SidePanel(this);
+        cardPanel = new CardPanel(this);
 
-        // Set controller
-        SIDE_PANEL.setController(controller);
-        MENU_BAR.setController(controller);
-        
         // OS Theme
         if (isSysLaf) {
             detector.registerListener(isDark -> {
@@ -79,8 +72,10 @@ public class GUI extends JFrame implements View {
             }); setTheme(osTheme);
         }
         
-        // Actions
-        addSplitPaneActions();
+        // Make view
+        style();
+        build();
+        addActions();
         
         // Show
         pack();
@@ -88,38 +83,7 @@ public class GUI extends JFrame implements View {
         setVisible(true);
         
         // Default view
-        MENU_BAR.setDefaultView();
-    }
-
-    private void addSplitPaneActions() {
-
-        // Divider
-        ((BasicSplitPaneUI) SPLIT_PANE.getUI())
-                .getDivider().addMouseListener(new MouseAdapter() {
-
-            // Fit content
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    SPLIT_PANE.setDividerLocation(-1);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void build() {
-
-        // GUI
-        add(MENU_BAR, BorderLayout.NORTH);
-        add(ROOT_PANEL, BorderLayout.CENTER);
-
-        // Root panel
-        ROOT_PANEL.add(SPLIT_PANE);
-
-        // Split pane
-        SPLIT_PANE.setLeftComponent(SIDE_PANEL);
-        SPLIT_PANE.setRightComponent(CARD_PANEL);
+        setDefaultView();
     }
 
     @Override
@@ -129,23 +93,62 @@ public class GUI extends JFrame implements View {
         setTitle("Flash Cards");
 
         // Root panel
-        ROOT_PANEL.setLayout(new BorderLayout());
-        ROOT_PANEL.setPreferredSize(new Dimension(600, 200));
+        rootPanel.setLayout(new BorderLayout());
+        rootPanel.setPreferredSize(new Dimension(600, 200));
 
         // Split pane
-        SPLIT_PANE.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-        SPLIT_PANE.setBorder(new EmptyBorder(10, 10, 10, 10));
-        SPLIT_PANE.setDividerSize(10);
+        splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+        splitPane.setDividerSize(10);
+    }
+
+    @Override
+    public void build() {
+
+        // GUI
+        add(menuBar, BorderLayout.NORTH);
+        add(rootPanel, BorderLayout.CENTER);
+
+        // Root panel
+        rootPanel.add(splitPane);
+
+        // Split pane
+        splitPane.setLeftComponent(sidePanel);
+        splitPane.setRightComponent(cardPanel);
+    }
+
+    /**
+     * Sets the default view.
+     * 
+     * <p> Default is:
+     * <ul>
+     *     <li><strong>Side panel</strong>: on
+     *     <li><strong>Editor mode</strong>: off
+     * </ul>
+     * </p>
+     */
+    void setDefaultView() {
+
+        // Side panel
+        menuBar.setSidePanelSelected(true);
+        
+        // Editor mode
+        menuBar.setEditorModeSelected(false);
     }
 
     /**
      * Sets GUI minimum size to fit sub components.
+     * 
      * <p>
      * Use this method to reset GUI size after view change.
      * </p>
      */
-    void resetSize() {
-        SPLIT_PANE.resetToPreferredSizes();
+    void resetMinimumSize() {
+
+        // Split pane
+        splitPane.resetToPreferredSizes();
+
+        // GUI
         setMinimumSize(this.getLayout().minimumLayoutSize(this));
         revalidate();
     }
@@ -159,21 +162,21 @@ public class GUI extends JFrame implements View {
     void setSidePanelVisible(boolean flag) {
 
         // Remove all components
-        ROOT_PANEL.removeAll();
+        rootPanel.removeAll();
 
         // Change view
         if (flag) {
-            ROOT_PANEL.add(SPLIT_PANE);
-            SPLIT_PANE.setRightComponent(CARD_PANEL);
+            rootPanel.add(splitPane);
+            splitPane.setRightComponent(cardPanel);
         } else {
-            ROOT_PANEL.add(CARD_PANEL);
+            rootPanel.add(cardPanel);
         }
 
         // Add/remove border
         if (flag) {
-            CARD_PANEL.setBorder(null);
+            cardPanel.setBorder(null);
         } else {
-            CARD_PANEL.setBorder(new EmptyBorder(10, 10, 10, 10));
+            cardPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
         }
     }
 
@@ -181,9 +184,36 @@ public class GUI extends JFrame implements View {
     public void setTheme(Theme theme) {
         osTheme = theme;
 
-        // Views
-        SIDE_PANEL.setTheme(theme);
-        CARD_PANEL.setTheme(theme);
+        // Sub views
+        sidePanel.setTheme(theme);
+        cardPanel.setTheme(theme);
+        menuBar.setTheme(theme);
+    }
+
+    @Override
+    public void addActions() {
+        
+        // Actions
+        addSplitPaneActions();
+    }
+
+    /**
+     * Adds Split pane actions for {@link #splitPane}.
+     */
+    void addSplitPaneActions() {
+
+        // Divider
+        ((BasicSplitPaneUI) splitPane.getUI())
+                .getDivider().addMouseListener(new MouseAdapter() {
+
+            // Fit content
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
+                    splitPane.setDividerLocation(-1);
+                }
+            }
+        });
     }
 
 }

@@ -26,10 +26,16 @@ interface View {
     void build();
 
     /**
+     * Adds all actions of this view.
+     */
+    void addActions();
+
+    /**
      * Sets view theme.
      * 
      * @param theme the theme to set
      * @see {@link Theme}
      */
     void setTheme(Theme theme);
+    
 }

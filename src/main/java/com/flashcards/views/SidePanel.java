@@ -34,60 +34,121 @@ import com.flashcards.models.Model;
  */
 class SidePanel extends JPanel implements View {
 
-    // Controller
-    // private Controller controller;
-
-    // GUI
+    // App
     private GUI gui;
-
-    // Context menu
-    private final ContextMenu CONTEXT_MENU = new ContextMenu(this);
+    private ContextMenu contextMenu;
 
     // Components
-    private final JLabel LABEL = new JLabel();
-    private final JButton REFRESH_BUTTON = new JButton();
-    public final JList<Card> CARDS_LIST = new JList<>();
-    private final JScrollPane SCROLL_PANE = new JScrollPane();
-
-    // Icon
-    private final ImageIcon refreshIcon = new ImageIcon();
+    private JLabel label;
+    private JButton refreshButton;
+    private JScrollPane scrollPane;
+    private JList<Card> cardsList;
+    private ImageIcon refreshIcon;
 
     /**
-     * Initializes this view.
+     * Initialize this view.
      * 
      * <p>
-     * Stylizes and builds this view.
+     * Stylizes, builds and add actions.
      * </p>
      * 
-     * @param gui the GUI to get <code>Card panel</code>
+     * @param gui the GUI
      */
     SidePanel(GUI gui) {
-        this.gui = gui;
 
-        // Make
+        // Init
+        this.gui = gui;
+        contextMenu = new ContextMenu(gui);
+        label = new JLabel();
+        refreshButton = new JButton();
+        scrollPane = new JScrollPane();
+        cardsList = new JList<>();
+        refreshIcon = new ImageIcon();
+
+        // Make view
         style();
         build();
+        addActions();
 
         // Get cards
         refreshCardsList();
     }
 
+    @Override
+    public void style() {
+
+        // Side panel
+        setLayout(new BorderLayout());
+        setMinimumSize(new Dimension(100, 200));
+
+        // Label
+        label.setText("Cards");
+
+        // Refresh icon
+        refreshIcon.setImage(new ImageIcon("./src/main/resources/refresh_black.png",
+                "Refresh").getImage()
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+
+        // Refresh button
+        refreshButton.setIcon(refreshIcon);
+        refreshButton.setBorder(new EmptyBorder(0, 0, 0, 0));
+    }
+
+    @Override
+    public void build() {
+
+        // Auxiliar panel
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.add(label);
+        panel.add(Box.createHorizontalGlue());
+        panel.add(refreshButton);
+
+        // Side panel
+        add(panel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // Scroll pane
+        scrollPane.setViewportView(cardsList);
+    }
+
     /**
-     * Define controller and add actions.
+     * Gets all cards in default <code>Cards Folder</code> and sets in
+     * <code>Cards list</code>.
      * 
-     * @param controller the controller to set
-     * @see {@link #addFileActions}
-     * @see {@link #addViewActions}
+     * @see {@link com.flashcards.models.Model#CARDS_FOLDER}
      */
-    public void setController(Controller controller) {
-        // this.controller = controller;
+    void refreshCardsList() {
+        cardsList.setListData(Model.getCardsList());
+    }
+
+    /**
+     * Gets the current selected card in side panel list.
+     * 
+     * @return the current selected card
+     */
+    Card getSelectedCard() {
+        return cardsList.getSelectedValue();
+    }
+
+    @Override
+    public void setTheme(Theme theme) {
+
+        String fileName;
+        if (theme == Theme.DARK) { fileName = "./src/main/resources/refresh_white.png"; }
+        else { fileName = "./src/main/resources/refresh_black.png"; }
+
+        refreshIcon.setImage(new ImageIcon(fileName,"Refresh").getImage()
+                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+    }
+
+    @Override
+    public void addActions() {
 
         // Actions
-        if (controller != null) {
-            addMouseActions();
-            addKeyActions();
-            addButtonActions();
-        }
+        addMouseActions();
+        addKeyActions();
+        addButtonActions();
     }
 
     /**
@@ -97,27 +158,27 @@ class SidePanel extends JPanel implements View {
      */
     private void addMouseActions() {
 
-        CARDS_LIST.addMouseListener(new MouseAdapter() {
+        cardsList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                // Double click
+                // Open (double click)
                 if (e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
-                    if (!CARDS_LIST.isSelectionEmpty()) {
-                        gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    if (!cardsList.isSelectionEmpty()) {
+                        gui.cardPanel.setCard(cardsList.getSelectedValue());
                     }
                 }
 
-                // Right click
+                // Show context menu (right click)
                 if (e.getButton() == MouseEvent.BUTTON3) {
 
                     // Select with right click
-                    int i = CARDS_LIST.locationToIndex(e.getPoint());
-                    CARDS_LIST.setSelectedIndex(i);
+                    int i = cardsList.locationToIndex(e.getPoint());
+                    cardsList.setSelectedIndex(i);
 
                     // Context menu
-                    if (!CARDS_LIST.isSelectionEmpty()) {
-                        CONTEXT_MENU.show(CARDS_LIST, e.getX(), e.getY());
+                    if (!cardsList.isSelectionEmpty()) {
+                        contextMenu.show(cardsList, e.getX(), e.getY());
                     }
                 }
             }
@@ -131,21 +192,21 @@ class SidePanel extends JPanel implements View {
      */
     private void addKeyActions() {
 
-        CARDS_LIST.addKeyListener(new KeyAdapter() {
+        cardsList.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
 
-                // Enter key
+                // Open card (Enter key)
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    if (!CARDS_LIST.isSelectionEmpty()) {
-                        gui.CARD_PANEL.setCard(CARDS_LIST.getSelectedValue());
+                    if (!cardsList.isSelectionEmpty()) {
+                        gui.cardPanel.setCard(cardsList.getSelectedValue());
                     }
                 }
 
-                // Delete key
+                // Delete card (Delete key)
                 if (e.getKeyCode() == KeyEvent.VK_DELETE) {
-                    if (!CARDS_LIST.isSelectionEmpty()) {
-                        CARDS_LIST.getSelectedValue().delete();
+                    if (!cardsList.isSelectionEmpty()) {
+                        Controller.deleteCard(cardsList.getSelectedValue());
                         refreshCardsList();
                     }
                 }
@@ -160,68 +221,9 @@ class SidePanel extends JPanel implements View {
     private void addButtonActions() {
 
         // Refresh
-        REFRESH_BUTTON.addActionListener((ActionEvent e) -> {
+        refreshButton.addActionListener((ActionEvent e) -> {
             refreshCardsList();
         });
-    }
-
-    @Override
-    public void build() {
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.add(LABEL);
-        panel.add(Box.createHorizontalGlue());
-        panel.add(REFRESH_BUTTON);
-
-        // Side panel
-        add(panel, BorderLayout.NORTH);
-        add(SCROLL_PANE, BorderLayout.CENTER);
-
-        // Scroll pane
-        SCROLL_PANE.setViewportView(CARDS_LIST);
-    }
-
-    @Override
-    public void style() {
-
-        // Side panel
-        setLayout(new BorderLayout());
-        setMinimumSize(new Dimension(100, 200));
-
-        // Label
-        LABEL.setText("Cards");
-
-        // Refresh icon
-        refreshIcon.setImage(new ImageIcon("./src/main/resources/refresh_black.png",
-                "Refresh").getImage()
-                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
-
-        // Refresh button
-        REFRESH_BUTTON.setIcon(refreshIcon);
-        REFRESH_BUTTON.setBorder(new EmptyBorder(0, 0, 0, 0));
-    }
-
-    /**
-     * Gets all cards in default <code>Cards Folder</code> and sets in
-     * <code>Cards list</code>.
-     * 
-     * @see {@link com.flashcards.models.Model#CARDS_FOLDER}
-     */
-    private void refreshCardsList() {
-        CARDS_LIST.setListData(Model.getCardsList());
-    }
-
-    @Override
-    public void setTheme(Theme theme) {
-
-        String fileName;
-        if (theme == Theme.DARK) { fileName = "./src/main/resources/refresh_white.png"; }
-        else { fileName = "./src/main/resources/refresh_black.png"; }
-
-        refreshIcon.setImage(new ImageIcon(fileName,
-                "Refresh").getImage()
-                .getScaledInstance(20, 20, Image.SCALE_SMOOTH));
     }
 
 }

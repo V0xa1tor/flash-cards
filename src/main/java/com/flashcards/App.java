@@ -1,6 +1,5 @@
 package com.flashcards;
 
-import com.flashcards.controllers.Controller;
 import com.flashcards.views.GUI;
 
 /**
@@ -9,6 +8,7 @@ import com.flashcards.views.GUI;
  * <p>
  * App to play Flash Cards. Cards with question in front, answer in back.
  * </p>
+ * 
  * <p>
  * This app can also create, edit, save and open cards.
  * </p>
@@ -25,11 +25,10 @@ public class App {
     /**
      * Initializes the App.
      * 
-     * @see {@link com.flashcards.controllers.Controller}
      * @see {@link com.flashcards.views.GUI}
      */
     App() {
-        new GUI(new Controller());
+        new GUI();
     }
 
 }

@@ -9,7 +9,6 @@ import javax.swing.JMenuItem;
 
 import com.flashcards.controllers.Controller;
 import com.flashcards.models.Card;
-import com.flashcards.models.Model;
 
 /**
  * View representing the menu bar.
@@ -19,135 +18,101 @@ import com.flashcards.models.Model;
  * </p>
  * 
  * <p>
- * <strong>File</strong>
+ * <strong>File menu</strong>
  * <ul>
- * <li>New card
- * <li>Open card
- * <li>Save card
+ *     <li>New card
+ *     <li>Open card
+ *     <li>Save card
  * </ul>
  * </p>
  * 
  * <p>
- * <strong>View</strong>
+ * <strong>View menu</strong>
  * <ul>
- * <li>Side panel
- * <li>Editor mode
+ *     <li>Side panel
+ *     <li>Editor mode
  * </ul>
  * </p>
  */
 class AppMenuBar extends JMenuBar implements View {
 
-    // Controller
-    private Controller controller;
-
-    // File menu
-    private final JMenu FILE_MENU = new JMenu();
-    private final JMenuItem NEW = new JMenuItem();
-    private final JMenuItem OPEN = new JMenuItem();
-    private final JMenuItem SAVE = new JMenuItem();
-
-    // View menu
-    private final JMenu VIEW_MENU = new JMenu();
-    private final JCheckBoxMenuItem SIDE_PANEL_CB = new JCheckBoxMenuItem();
-    private final JCheckBoxMenuItem EDITOR_MODE_CB = new JCheckBoxMenuItem();
-
     // GUI
     private GUI gui;
+
+    // File menu
+    private JMenu fileMenu;
+    private JMenuItem newItem;
+    private JMenuItem openItem;
+    private JMenuItem saveItem;
+
+    // View menu
+    private JMenu viewMenu;
+    private JCheckBoxMenuItem sidePaneItem;
+    private JCheckBoxMenuItem editorModeItem;
 
     /**
      * Initialize this view.
      * 
      * <p>
-     * Stylizes and builds this view.
+     * Stylizes, builds and add actions.
      * </p>
      * 
-     * <p>
-     * For <code>Side panel</code> and <code>Editor mode</code> actions to work, is
-     * needed bind other views.
-     * </p>
-     * 
-     * @param gui the view wich have <code>Side panel</code> and
-     *            <code>Card panel</code>
+     * @param gui the GUI
      */
     AppMenuBar(GUI gui) {
-        this.gui = gui;
 
-        // Make
+        // Init
+        this.gui = gui;
+        fileMenu = new JMenu();
+        newItem = new JMenuItem();
+        openItem = new JMenuItem();
+        saveItem = new JMenuItem();
+        viewMenu = new JMenu();
+        sidePaneItem = new JCheckBoxMenuItem();
+        editorModeItem = new JCheckBoxMenuItem();
+
+        // Make view
         style();
         build();
-    }
-
-    @Override
-    public void build() {
-
-        // Menu bar
-        add(FILE_MENU);
-        add(VIEW_MENU);
-
-        // File menu
-        FILE_MENU.add(NEW);
-        FILE_MENU.add(OPEN);
-        FILE_MENU.add(SAVE);
-
-        // View menu
-        VIEW_MENU.add(SIDE_PANEL_CB);
-        VIEW_MENU.add(EDITOR_MODE_CB);
+        addActions();
     }
 
     @Override
     public void style() {
 
         // File menu
-        FILE_MENU.setText("File");
+        fileMenu.setText("File");
 
-        NEW.setText("New card");
-        OPEN.setText("Open card");
-        SAVE.setText("Save card");
+        newItem.setText("New card");
+        openItem.setText("Open card");
+        saveItem.setText("Save card");
 
         // View menu
-        VIEW_MENU.setText("View");
+        viewMenu.setText("View");
 
-        SIDE_PANEL_CB.setText("Side panel");
-        EDITOR_MODE_CB.setText("Editor mode");
+        sidePaneItem.setText("Side panel");
+        editorModeItem.setText("Editor mode");
     }
 
-    /**
-     * Define controller and add actions.
-     * 
-     * @param controller the controller to set
-     * @see {@link #addFileActions}
-     * @see {@link #addViewActions}
-     */
-    public void setController(Controller controller) {
-        this.controller = controller;
+    @Override
+    public void build() {
 
-        // Actions
-        if (controller != null) {
-            addFileActions();
-            addViewActions();
-        }
+        // Menu bar
+        add(fileMenu);
+        add(viewMenu);
+
+        // File menu
+        fileMenu.add(newItem);
+        fileMenu.add(openItem);
+        fileMenu.add(saveItem);
+
+        // View menu
+        viewMenu.add(sidePaneItem);
+        viewMenu.add(editorModeItem);
     }
 
-    /**
-     * Initializes the default view.
-     * <p>
-     * Default is:
-     * <ul>
-     * <li><strong>Side panel</strong>: on
-     * <li><strong>Editor mode</strong>: on
-     * </ul>
-     * </p>
-     * 
-     * @see {@link com.flashcards.App}
-     */
-    public void setDefaultView() {
-
-        // Side panel
-        setSidePanelSelected(true);
-
-        // Editor mode
-        setEditorModeSelected(false);
-    }
+    @Override
+    public void setTheme(Theme theme) {}
 
     /**
      * Enables or disables <code>Side panel</code>.
@@ -156,14 +121,13 @@ class AppMenuBar extends JMenuBar implements View {
      * 
      * @param b the state to set
      */
-    private void setSidePanelSelected(boolean b) {
-        if (gui != null) {
-            if (SIDE_PANEL_CB.isSelected() != b) {
-                SIDE_PANEL_CB.setSelected(b);
-            }
-            gui.setSidePanelVisible(SIDE_PANEL_CB.isSelected());
-            gui.resetSize();
+    void setSidePanelSelected(boolean b) {
+        if (sidePaneItem.isSelected() != b) {
+            sidePaneItem.setSelected(b);
         }
+        gui.setSidePanelVisible(sidePaneItem.isSelected());
+        gui.cardPanel.resetDividerLocation();
+        gui.resetMinimumSize();
     }
 
     /**
@@ -173,14 +137,21 @@ class AppMenuBar extends JMenuBar implements View {
      * 
      * @param b the state to set
      */
-    private void setEditorModeSelected(boolean b) {
-        if (gui != null) {
-            if (EDITOR_MODE_CB.isSelected() != b) {
-                EDITOR_MODE_CB.setSelected(b);
-            }
-            gui.CARD_PANEL.setEditorModeVisible(EDITOR_MODE_CB.isSelected());
-            gui.resetSize();
+    void setEditorModeSelected(boolean b) {
+        if (editorModeItem.isSelected() != b) {
+            editorModeItem.setSelected(b);
         }
+        gui.cardPanel.setEditorModeVisible(editorModeItem.isSelected());
+        gui.cardPanel.resetDividerLocation();
+        gui.resetMinimumSize();
+    }
+
+    @Override
+    public void addActions() {
+
+        // Actions
+        addFileMenuActions();
+        addViewMenuActions();
     }
 
     /**
@@ -190,54 +161,50 @@ class AppMenuBar extends JMenuBar implements View {
      * Actions: New, Open and Save.
      * </p>
      */
-    private void addFileActions() {
+    private void addFileMenuActions() {
 
         // New card
-        NEW.addActionListener((ActionEvent e) -> {
-            gui.CARD_PANEL.setCard(new Card());
-            gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
+        newItem.addActionListener((ActionEvent e) -> {
+            gui.cardPanel.setCard(new Card());
+            gui.sidePanel.refreshCardsList();
         });
 
         // Open card
-        OPEN.addActionListener((ActionEvent e) -> {
-            Card card = controller.getCardFromFile(gui);
+        openItem.addActionListener((ActionEvent e) -> {
+            Card card = Controller.openCard(gui);
             if (card != null) {
-                gui.CARD_PANEL.setCard(card);
-                gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
+                gui.cardPanel.setCard(card);
+                gui.sidePanel.refreshCardsList();
             }
         });
 
         // Save card
-        SAVE.addActionListener((ActionEvent e) -> {
-            controller.saveCard(gui.CARD_PANEL.getCard(), gui);
-            gui.SIDE_PANEL.CARDS_LIST.setListData(Model.getCardsList());
+        saveItem.addActionListener((ActionEvent e) -> {
+            Controller.saveCard(gui.cardPanel.getCard(), gui);
+            gui.sidePanel.refreshCardsList();
         });
     }
 
     /**
-     * Adds behavior to "View" menu.
+     * Adds actions to "View" menu.
      * Uses other views to bind actions.
      * 
      * <ul>
-     * <li>Show/hide side panel
-     * <li>Enter/exit editor mode
+     *     <li>Show/hide side panel
+     *     <li>Enter/exit editor mode
      * </ul>
      */
-    private void addViewActions() {
+    private void addViewMenuActions() {
 
         // Show/hide side panel
-        SIDE_PANEL_CB.addActionListener((ActionEvent e) -> {
-            setSidePanelSelected(SIDE_PANEL_CB.isSelected());
-            gui.CARD_PANEL.resetDividerLocation();
+        sidePaneItem.addActionListener((ActionEvent e) -> {
+            setSidePanelSelected(sidePaneItem.isSelected());
         });
         
         // Enter/exit editor mode
-        EDITOR_MODE_CB.addActionListener((ActionEvent e) -> {
-            setEditorModeSelected(EDITOR_MODE_CB.isSelected());
-            gui.CARD_PANEL.resetDividerLocation();
+        editorModeItem.addActionListener((ActionEvent e) -> {
+            setEditorModeSelected(editorModeItem.isSelected());
         });
     }
 
-    @Override
-    public void setTheme(Theme theme) {}
 }
