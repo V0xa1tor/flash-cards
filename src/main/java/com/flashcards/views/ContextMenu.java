@@ -3,9 +3,11 @@ package com.flashcards.views;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
-import com.flashcards.models.Model;
+import com.flashcards.controllers.Controller;
+import com.flashcards.models.Card;
 
 /**
  * View representing the context menu when right click on
@@ -15,28 +17,61 @@ import com.flashcards.models.Model;
  */
 class ContextMenu extends JPopupMenu implements View {
 
-    // Context menu item
-    private final JMenuItem DELETE = new JMenuItem();
+    // GUI
+    private GUI gui;
 
-    // Side panel
-    private SidePanel sidePanel;
+    // Context menu item
+    private JMenuItem renameItem;
+    private JMenuItem deleteItem;
 
     /**
      * Initialize this view.
      * 
      * <p>
-     * Stylizes and builds this view. Also adds action behaviors.
+     * Stylizes, builds and add actions.
      * </p>
      * 
-     * @param sidePanel the side panel to bind
+     * @param gui the GUI
      */
-    ContextMenu(SidePanel sidePanel) {
-        this.sidePanel = sidePanel;
+    ContextMenu(GUI gui) {
 
-        // Make
+        // Init
+        this.gui = gui;
+        renameItem = new JMenuItem();
+        deleteItem = new JMenuItem();
+
+        // Make view
         style();
         build();
+        addActions();
+    }
 
+    @Override
+    public void style() {
+
+        // Rename
+        renameItem.setText("Rename card");
+
+        // Delete
+        deleteItem.setText("Delete card");
+    }
+
+    @Override
+    public void build() {
+
+        // Rename
+        add(renameItem);
+
+        // Delete
+        add(deleteItem);
+    }
+
+    @Override
+    public void setTheme(Theme theme) {}
+
+    @Override
+    public void addActions() {
+        
         // Actions
         addContextActions();
     }
@@ -48,28 +83,37 @@ class ContextMenu extends JPopupMenu implements View {
      */
     private void addContextActions() {
 
-        // Delete card
-        DELETE.addActionListener((ActionEvent e) -> {
-            sidePanel.CARDS_LIST.getSelectedValue().delete();
-            sidePanel.CARDS_LIST.setListData(Model.getCardsList());
+        // Rename
+        renameItem.addActionListener((ActionEvent e) -> {
+
+
+            // Get new name
+            Card card = gui.sidePanel.getSelectedCard();
+            String newName = (String) JOptionPane.showInputDialog(gui,
+                    "New name:",
+                    "Rename \"" + card.toString() + "\" card",
+                    JOptionPane.PLAIN_MESSAGE);
+            newName = (newName == null) ? "" : newName;
+
+            if (!newName.equals("")) {
+
+                // Rename card
+                Controller.renameCard(card, newName);
+                
+                // Refresh cards list
+                gui.sidePanel.refreshCardsList();
+            }
+        });
+
+        // Delete
+        deleteItem.addActionListener((ActionEvent e) -> {
+
+            // Delete card
+            Controller.deleteCard(gui.sidePanel.getSelectedCard());
+
+            // Refresh cards list
+            gui.sidePanel.refreshCardsList();
         });
     }
-
-    @Override
-    public void build() {
-
-        // Delete
-        add(DELETE);
-    }
-
-    @Override
-    public void style() {
-
-        // Delete
-        DELETE.setText("Delete card");
-    }
-
-    @Override
-    public void setTheme(Theme theme) {}
 
 }
